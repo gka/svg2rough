@@ -1,5 +1,526 @@
-var app=function(){"use strict";function t(){}function e(t,e){for(const n in e)t[n]=e[n];return t}function n(t){return t()}function r(){return Object.create(null)}function o(t){t.forEach(n)}function a(t){return"function"==typeof t}function i(t,e){return t!=t?e==e:t!==e||t&&"object"==typeof t||"function"==typeof t}function s(t,n,r,o){return t[1]&&o?e(r.ctx.slice(),t[1](o(n))):r.ctx}function u(t,e){t.appendChild(e)}function c(t,e,n){t.insertBefore(e,n||null)}function l(t){t.parentNode.removeChild(t)}function h(t){return document.createElement(t)}function f(){return t=" ",document.createTextNode(t);var t}function p(t,e,n,r){return t.addEventListener(e,n,r),()=>t.removeEventListener(e,n,r)}function d(t,e,n){null==n?t.removeAttribute(e):t.getAttribute(e)!==n&&t.setAttribute(e,n)}function g(t,e){for(const n in e)d(t,n,e[n])}function v(t,e,n,r){t.style.setProperty(e,n,r?"important":"")}function y(t,e,n){t.classList[n?"add":"remove"](e)}let m;function b(t){m=t}function k(){if(!m)throw new Error("Function called outside component initialization");return m}function M(t){k().$$.on_mount.push(t)}function w(){const t=k();return(e,n)=>{const r=t.$$.callbacks[e];if(r){const o=function(t,e,n=!1){const r=document.createEvent("CustomEvent");return r.initCustomEvent(t,n,!1,e),r}(e,n);r.slice().forEach((e=>{e.call(t,o)}))}}}const x=[],P=[],S=[],O=[],D=Promise.resolve();let $=!1;function A(t){S.push(t)}const E=new Set;let L=0;function _(){const t=m;do{for(;L<x.length;){const t=x[L];L++,b(t),T(t.$$)}for(b(null),x.length=0,L=0;P.length;)P.pop()();for(let t=0;t<S.length;t+=1){const e=S[t];E.has(e)||(E.add(e),e())}S.length=0}while(x.length);for(;O.length;)O.pop()();$=!1,E.clear(),b(t)}function T(t){if(null!==t.fragment){t.update(),o(t.before_update);const e=t.dirty;t.dirty=[-1],t.fragment&&t.fragment.p(t.ctx,e),t.after_update.forEach(A)}}const C=new Set;function z(t,e){t&&t.i&&(C.delete(t),t.i(e))}function F(t,e,n,r){if(t&&t.o){if(C.has(t))return;C.add(t),undefined.c.push((()=>{C.delete(t),r&&(n&&t.d(1),r())})),t.o(e)}}function j(t,e,r,i){const{fragment:s,on_mount:u,on_destroy:c,after_update:l}=t.$$;s&&s.m(e,r),i||A((()=>{const e=u.map(n).filter(a);c?c.push(...e):o(e),t.$$.on_mount=[]})),l.forEach(A)}function I(t,e){const n=t.$$;null!==n.fragment&&(o(n.on_destroy),n.fragment&&n.fragment.d(e),n.on_destroy=n.fragment=null,n.ctx=[])}function W(t,e){-1===t.$$.dirty[0]&&(x.push(t),$||($=!0,D.then(_)),t.$$.dirty.fill(0)),t.$$.dirty[e/31|0]|=1<<e%31}function R(e,n,a,i,s,u,c,h=[-1]){const f=m;b(e);const p=e.$$={fragment:null,ctx:null,props:u,update:t,not_equal:s,bound:r(),on_mount:[],on_destroy:[],on_disconnect:[],before_update:[],after_update:[],context:new Map(n.context||(f?f.$$.context:[])),callbacks:r(),dirty:h,skip_bound:!1,root:n.target||f.$$.root};c&&c(p.root);let d=!1;if(p.ctx=a?a(e,n.props||{},((t,n,...r)=>{const o=r.length?r[0]:n;return p.ctx&&s(p.ctx[t],p.ctx[t]=o)&&(!p.skip_bound&&p.bound[t]&&p.bound[t](o),d&&W(e,t)),n})):[],p.update(),d=!0,o(p.before_update),p.fragment=!!i&&i(p.ctx),n.target){if(n.hydrate){const t=function(t){return Array.from(t.childNodes)}(n.target);p.fragment&&p.fragment.l(t),t.forEach(l)}else p.fragment&&p.fragment.c();n.intro&&z(e.$$.fragment),j(e,n.target,n.anchor,n.customElement),_()}b(f)}class G{$destroy(){I(this,1),this.$destroy=t}$on(t,e){const n=this.$$.callbacks[t]||(this.$$.callbacks[t]=[]);return n.push(e),()=>{const t=n.indexOf(e);-1!==t&&n.splice(t,1)}}$set(t){var e;this.$$set&&(e=t,0!==Object.keys(e).length)&&(this.$$.skip_bound=!0,this.$$set(t),this.$$.skip_bound=!1)}}
-/*! *****************************************************************************
+
+(function(l, r) { if (!l || l.getElementById('livereloadscript')) return; r = l.createElement('script'); r.async = 1; r.src = '//' + (self.location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1'; r.id = 'livereloadscript'; l.getElementsByTagName('head')[0].appendChild(r) })(self.document);
+var app = (function () {
+    'use strict';
+
+    function noop() { }
+    function assign(tar, src) {
+        // @ts-ignore
+        for (const k in src)
+            tar[k] = src[k];
+        return tar;
+    }
+    function add_location(element, file, line, column, char) {
+        element.__svelte_meta = {
+            loc: { file, line, column, char }
+        };
+    }
+    function run(fn) {
+        return fn();
+    }
+    function blank_object() {
+        return Object.create(null);
+    }
+    function run_all(fns) {
+        fns.forEach(run);
+    }
+    function is_function(thing) {
+        return typeof thing === 'function';
+    }
+    function safe_not_equal(a, b) {
+        return a != a ? b == b : a !== b || ((a && typeof a === 'object') || typeof a === 'function');
+    }
+    function is_empty(obj) {
+        return Object.keys(obj).length === 0;
+    }
+    function create_slot(definition, ctx, $$scope, fn) {
+        if (definition) {
+            const slot_ctx = get_slot_context(definition, ctx, $$scope, fn);
+            return definition[0](slot_ctx);
+        }
+    }
+    function get_slot_context(definition, ctx, $$scope, fn) {
+        return definition[1] && fn
+            ? assign($$scope.ctx.slice(), definition[1](fn(ctx)))
+            : $$scope.ctx;
+    }
+    function get_slot_changes(definition, $$scope, dirty, fn) {
+        if (definition[2] && fn) {
+            const lets = definition[2](fn(dirty));
+            if ($$scope.dirty === undefined) {
+                return lets;
+            }
+            if (typeof lets === 'object') {
+                const merged = [];
+                const len = Math.max($$scope.dirty.length, lets.length);
+                for (let i = 0; i < len; i += 1) {
+                    merged[i] = $$scope.dirty[i] | lets[i];
+                }
+                return merged;
+            }
+            return $$scope.dirty | lets;
+        }
+        return $$scope.dirty;
+    }
+    function update_slot_base(slot, slot_definition, ctx, $$scope, slot_changes, get_slot_context_fn) {
+        if (slot_changes) {
+            const slot_context = get_slot_context(slot_definition, ctx, $$scope, get_slot_context_fn);
+            slot.p(slot_context, slot_changes);
+        }
+    }
+    function get_all_dirty_from_scope($$scope) {
+        if ($$scope.ctx.length > 32) {
+            const dirty = [];
+            const length = $$scope.ctx.length / 32;
+            for (let i = 0; i < length; i++) {
+                dirty[i] = -1;
+            }
+            return dirty;
+        }
+        return -1;
+    }
+    function append(target, node) {
+        target.appendChild(node);
+    }
+    function insert(target, node, anchor) {
+        target.insertBefore(node, anchor || null);
+    }
+    function detach(node) {
+        node.parentNode.removeChild(node);
+    }
+    function element(name) {
+        return document.createElement(name);
+    }
+    function svg_element(name) {
+        return document.createElementNS('http://www.w3.org/2000/svg', name);
+    }
+    function text(data) {
+        return document.createTextNode(data);
+    }
+    function space() {
+        return text(' ');
+    }
+    function listen(node, event, handler, options) {
+        node.addEventListener(event, handler, options);
+        return () => node.removeEventListener(event, handler, options);
+    }
+    function attr(node, attribute, value) {
+        if (value == null)
+            node.removeAttribute(attribute);
+        else if (node.getAttribute(attribute) !== value)
+            node.setAttribute(attribute, value);
+    }
+    function set_svg_attributes(node, attributes) {
+        for (const key in attributes) {
+            attr(node, key, attributes[key]);
+        }
+    }
+    function children(element) {
+        return Array.from(element.childNodes);
+    }
+    function set_style(node, key, value, important) {
+        node.style.setProperty(key, value, important ? 'important' : '');
+    }
+    function toggle_class(element, name, toggle) {
+        element.classList[toggle ? 'add' : 'remove'](name);
+    }
+    function custom_event(type, detail, bubbles = false) {
+        const e = document.createEvent('CustomEvent');
+        e.initCustomEvent(type, bubbles, false, detail);
+        return e;
+    }
+
+    let current_component;
+    function set_current_component(component) {
+        current_component = component;
+    }
+    function get_current_component() {
+        if (!current_component)
+            throw new Error('Function called outside component initialization');
+        return current_component;
+    }
+    function onMount(fn) {
+        get_current_component().$$.on_mount.push(fn);
+    }
+    function onDestroy(fn) {
+        get_current_component().$$.on_destroy.push(fn);
+    }
+    function createEventDispatcher() {
+        const component = get_current_component();
+        return (type, detail) => {
+            const callbacks = component.$$.callbacks[type];
+            if (callbacks) {
+                // TODO are there situations where events could be dispatched
+                // in a server (non-DOM) environment?
+                const event = custom_event(type, detail);
+                callbacks.slice().forEach(fn => {
+                    fn.call(component, event);
+                });
+            }
+        };
+    }
+
+    const dirty_components = [];
+    const binding_callbacks = [];
+    const render_callbacks = [];
+    const flush_callbacks = [];
+    const resolved_promise = Promise.resolve();
+    let update_scheduled = false;
+    function schedule_update() {
+        if (!update_scheduled) {
+            update_scheduled = true;
+            resolved_promise.then(flush);
+        }
+    }
+    function add_render_callback(fn) {
+        render_callbacks.push(fn);
+    }
+    // flush() calls callbacks in this order:
+    // 1. All beforeUpdate callbacks, in order: parents before children
+    // 2. All bind:this callbacks, in reverse order: children before parents.
+    // 3. All afterUpdate callbacks, in order: parents before children. EXCEPT
+    //    for afterUpdates called during the initial onMount, which are called in
+    //    reverse order: children before parents.
+    // Since callbacks might update component values, which could trigger another
+    // call to flush(), the following steps guard against this:
+    // 1. During beforeUpdate, any updated components will be added to the
+    //    dirty_components array and will cause a reentrant call to flush(). Because
+    //    the flush index is kept outside the function, the reentrant call will pick
+    //    up where the earlier call left off and go through all dirty components. The
+    //    current_component value is saved and restored so that the reentrant call will
+    //    not interfere with the "parent" flush() call.
+    // 2. bind:this callbacks cannot trigger new flush() calls.
+    // 3. During afterUpdate, any updated components will NOT have their afterUpdate
+    //    callback called a second time; the seen_callbacks set, outside the flush()
+    //    function, guarantees this behavior.
+    const seen_callbacks = new Set();
+    let flushidx = 0; // Do *not* move this inside the flush() function
+    function flush() {
+        const saved_component = current_component;
+        do {
+            // first, call beforeUpdate functions
+            // and update components
+            while (flushidx < dirty_components.length) {
+                const component = dirty_components[flushidx];
+                flushidx++;
+                set_current_component(component);
+                update(component.$$);
+            }
+            set_current_component(null);
+            dirty_components.length = 0;
+            flushidx = 0;
+            while (binding_callbacks.length)
+                binding_callbacks.pop()();
+            // then, once components are updated, call
+            // afterUpdate functions. This may cause
+            // subsequent updates...
+            for (let i = 0; i < render_callbacks.length; i += 1) {
+                const callback = render_callbacks[i];
+                if (!seen_callbacks.has(callback)) {
+                    // ...so guard against infinite loops
+                    seen_callbacks.add(callback);
+                    callback();
+                }
+            }
+            render_callbacks.length = 0;
+        } while (dirty_components.length);
+        while (flush_callbacks.length) {
+            flush_callbacks.pop()();
+        }
+        update_scheduled = false;
+        seen_callbacks.clear();
+        set_current_component(saved_component);
+    }
+    function update($$) {
+        if ($$.fragment !== null) {
+            $$.update();
+            run_all($$.before_update);
+            const dirty = $$.dirty;
+            $$.dirty = [-1];
+            $$.fragment && $$.fragment.p($$.ctx, dirty);
+            $$.after_update.forEach(add_render_callback);
+        }
+    }
+    const outroing = new Set();
+    let outros;
+    function group_outros() {
+        outros = {
+            r: 0,
+            c: [],
+            p: outros // parent group
+        };
+    }
+    function check_outros() {
+        if (!outros.r) {
+            run_all(outros.c);
+        }
+        outros = outros.p;
+    }
+    function transition_in(block, local) {
+        if (block && block.i) {
+            outroing.delete(block);
+            block.i(local);
+        }
+    }
+    function transition_out(block, local, detach, callback) {
+        if (block && block.o) {
+            if (outroing.has(block))
+                return;
+            outroing.add(block);
+            outros.c.push(() => {
+                outroing.delete(block);
+                if (callback) {
+                    if (detach)
+                        block.d(1);
+                    callback();
+                }
+            });
+            block.o(local);
+        }
+    }
+
+    const globals = (typeof window !== 'undefined'
+        ? window
+        : typeof globalThis !== 'undefined'
+            ? globalThis
+            : global);
+
+    function get_spread_update(levels, updates) {
+        const update = {};
+        const to_null_out = {};
+        const accounted_for = { $$scope: 1 };
+        let i = levels.length;
+        while (i--) {
+            const o = levels[i];
+            const n = updates[i];
+            if (n) {
+                for (const key in o) {
+                    if (!(key in n))
+                        to_null_out[key] = 1;
+                }
+                for (const key in n) {
+                    if (!accounted_for[key]) {
+                        update[key] = n[key];
+                        accounted_for[key] = 1;
+                    }
+                }
+                levels[i] = n;
+            }
+            else {
+                for (const key in o) {
+                    accounted_for[key] = 1;
+                }
+            }
+        }
+        for (const key in to_null_out) {
+            if (!(key in update))
+                update[key] = undefined;
+        }
+        return update;
+    }
+    function create_component(block) {
+        block && block.c();
+    }
+    function mount_component(component, target, anchor, customElement) {
+        const { fragment, on_mount, on_destroy, after_update } = component.$$;
+        fragment && fragment.m(target, anchor);
+        if (!customElement) {
+            // onMount happens before the initial afterUpdate
+            add_render_callback(() => {
+                const new_on_destroy = on_mount.map(run).filter(is_function);
+                if (on_destroy) {
+                    on_destroy.push(...new_on_destroy);
+                }
+                else {
+                    // Edge case - component was destroyed immediately,
+                    // most likely as a result of a binding initialising
+                    run_all(new_on_destroy);
+                }
+                component.$$.on_mount = [];
+            });
+        }
+        after_update.forEach(add_render_callback);
+    }
+    function destroy_component(component, detaching) {
+        const $$ = component.$$;
+        if ($$.fragment !== null) {
+            run_all($$.on_destroy);
+            $$.fragment && $$.fragment.d(detaching);
+            // TODO null out other refs, including component.$$ (but need to
+            // preserve final state?)
+            $$.on_destroy = $$.fragment = null;
+            $$.ctx = [];
+        }
+    }
+    function make_dirty(component, i) {
+        if (component.$$.dirty[0] === -1) {
+            dirty_components.push(component);
+            schedule_update();
+            component.$$.dirty.fill(0);
+        }
+        component.$$.dirty[(i / 31) | 0] |= (1 << (i % 31));
+    }
+    function init(component, options, instance, create_fragment, not_equal, props, append_styles, dirty = [-1]) {
+        const parent_component = current_component;
+        set_current_component(component);
+        const $$ = component.$$ = {
+            fragment: null,
+            ctx: null,
+            // state
+            props,
+            update: noop,
+            not_equal,
+            bound: blank_object(),
+            // lifecycle
+            on_mount: [],
+            on_destroy: [],
+            on_disconnect: [],
+            before_update: [],
+            after_update: [],
+            context: new Map(options.context || (parent_component ? parent_component.$$.context : [])),
+            // everything else
+            callbacks: blank_object(),
+            dirty,
+            skip_bound: false,
+            root: options.target || parent_component.$$.root
+        };
+        append_styles && append_styles($$.root);
+        let ready = false;
+        $$.ctx = instance
+            ? instance(component, options.props || {}, (i, ret, ...rest) => {
+                const value = rest.length ? rest[0] : ret;
+                if ($$.ctx && not_equal($$.ctx[i], $$.ctx[i] = value)) {
+                    if (!$$.skip_bound && $$.bound[i])
+                        $$.bound[i](value);
+                    if (ready)
+                        make_dirty(component, i);
+                }
+                return ret;
+            })
+            : [];
+        $$.update();
+        ready = true;
+        run_all($$.before_update);
+        // `false` as a special case of no DOM component
+        $$.fragment = create_fragment ? create_fragment($$.ctx) : false;
+        if (options.target) {
+            if (options.hydrate) {
+                const nodes = children(options.target);
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                $$.fragment && $$.fragment.l(nodes);
+                nodes.forEach(detach);
+            }
+            else {
+                // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                $$.fragment && $$.fragment.c();
+            }
+            if (options.intro)
+                transition_in(component.$$.fragment);
+            mount_component(component, options.target, options.anchor, options.customElement);
+            flush();
+        }
+        set_current_component(parent_component);
+    }
+    /**
+     * Base class for Svelte components. Used when dev=false.
+     */
+    class SvelteComponent {
+        $destroy() {
+            destroy_component(this, 1);
+            this.$destroy = noop;
+        }
+        $on(type, callback) {
+            const callbacks = (this.$$.callbacks[type] || (this.$$.callbacks[type] = []));
+            callbacks.push(callback);
+            return () => {
+                const index = callbacks.indexOf(callback);
+                if (index !== -1)
+                    callbacks.splice(index, 1);
+            };
+        }
+        $set($$props) {
+            if (this.$$set && !is_empty($$props)) {
+                this.$$.skip_bound = true;
+                this.$$set($$props);
+                this.$$.skip_bound = false;
+            }
+        }
+    }
+
+    function dispatch_dev(type, detail) {
+        document.dispatchEvent(custom_event(type, Object.assign({ version: '3.44.3' }, detail), true));
+    }
+    function append_dev(target, node) {
+        dispatch_dev('SvelteDOMInsert', { target, node });
+        append(target, node);
+    }
+    function insert_dev(target, node, anchor) {
+        dispatch_dev('SvelteDOMInsert', { target, node, anchor });
+        insert(target, node, anchor);
+    }
+    function detach_dev(node) {
+        dispatch_dev('SvelteDOMRemove', { node });
+        detach(node);
+    }
+    function listen_dev(node, event, handler, options, has_prevent_default, has_stop_propagation) {
+        const modifiers = options === true ? ['capture'] : options ? Array.from(Object.keys(options)) : [];
+        if (has_prevent_default)
+            modifiers.push('preventDefault');
+        if (has_stop_propagation)
+            modifiers.push('stopPropagation');
+        dispatch_dev('SvelteDOMAddEventListener', { node, event, handler, modifiers });
+        const dispose = listen(node, event, handler, options);
+        return () => {
+            dispatch_dev('SvelteDOMRemoveEventListener', { node, event, handler, modifiers });
+            dispose();
+        };
+    }
+    function attr_dev(node, attribute, value) {
+        attr(node, attribute, value);
+        if (value == null)
+            dispatch_dev('SvelteDOMRemoveAttribute', { node, attribute });
+        else
+            dispatch_dev('SvelteDOMSetAttribute', { node, attribute, value });
+    }
+    function prop_dev(node, property, value) {
+        node[property] = value;
+        dispatch_dev('SvelteDOMSetProperty', { node, property, value });
+    }
+    function set_data_dev(text, data) {
+        data = '' + data;
+        if (text.wholeText === data)
+            return;
+        dispatch_dev('SvelteDOMSetData', { node: text, data });
+        text.data = data;
+    }
+    function validate_slots(name, slot, keys) {
+        for (const slot_key of Object.keys(slot)) {
+            if (!~keys.indexOf(slot_key)) {
+                console.warn(`<${name}> received an unexpected slot "${slot_key}".`);
+            }
+        }
+    }
+    /**
+     * Base class for Svelte components with some minor dev-enhancements. Used when dev=true.
+     */
+    class SvelteComponentDev extends SvelteComponent {
+        constructor(options) {
+            if (!options || (!options.target && !options.$$inline)) {
+                throw new Error("'target' is a required option");
+            }
+            super();
+        }
+        $destroy() {
+            super.$destroy();
+            this.$destroy = () => {
+                console.warn('Component was already destroyed'); // eslint-disable-line no-console
+            };
+        }
+        $capture_state() { }
+        $inject_state() { }
+    }
+
+    /*! *****************************************************************************
     Copyright (c) Microsoft Corporation.
 
     Permission to use, copy, modify, and/or distribute this software for any
@@ -12,5 +533,2346 @@ var app=function(){"use strict";function t(){}function e(t,e){for(const n in e)t
     LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
     OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
     PERFORMANCE OF THIS SOFTWARE.
-    ***************************************************************************** */function N(t,e,n,r){return new(n||(n=Promise))((function(o,a){function i(t){try{u(r.next(t))}catch(t){a(t)}}function s(t){try{u(r.throw(t))}catch(t){a(t)}}function u(t){var e;t.done?o(t.value):(e=t.value,e instanceof n?e:new n((function(t){t(e)}))).then(i,s)}u((r=r.apply(t,e||[])).next())}))}function q(t,e){var n,r,o,a,i={label:0,sent:function(){if(1&o[0])throw o[1];return o[1]},trys:[],ops:[]};return a={next:s(0),throw:s(1),return:s(2)},"function"==typeof Symbol&&(a[Symbol.iterator]=function(){return this}),a;function s(a){return function(s){return function(a){if(n)throw new TypeError("Generator is already executing.");for(;i;)try{if(n=1,r&&(o=2&a[0]?r.return:a[0]?r.throw||((o=r.return)&&o.call(r),0):r.next)&&!(o=o.call(r,a[1])).done)return o;switch(r=0,o&&(a=[2&a[0],o.value]),a[0]){case 0:case 1:o=a;break;case 4:return i.label++,{value:a[1],done:!1};case 5:i.label++,r=a[1],a=[0];continue;case 7:a=i.ops.pop(),i.trys.pop();continue;default:if(!(o=i.trys,(o=o.length>0&&o[o.length-1])||6!==a[0]&&2!==a[0])){i=0;continue}if(3===a[0]&&(!o||a[1]>o[0]&&a[1]<o[3])){i.label=a[1];break}if(6===a[0]&&i.label<o[1]){i.label=o[1],o=a;break}if(o&&i.label<o[2]){i.label=o[2],i.ops.push(a);break}o[2]&&i.ops.pop(),i.trys.pop();continue}a=e.call(t,i)}catch(t){a=[6,t],r=0}finally{n=o=0}if(5&a[0])throw a[1];return{value:a[0]?a[1]:void 0,done:!0}}([a,s])}}}function V(t,e){var n="function"==typeof Symbol&&t[Symbol.iterator];if(!n)return t;var r,o,a=n.call(t),i=[];try{for(;(void 0===e||e-- >0)&&!(r=a.next()).done;)i.push(r.value)}catch(t){o={error:t}}finally{try{r&&!r.done&&(n=a.return)&&n.call(a)}finally{if(o)throw o.error}}return i}var B=new Map([["avi","video/avi"],["gif","image/gif"],["ico","image/x-icon"],["jpeg","image/jpeg"],["jpg","image/jpeg"],["mkv","video/x-matroska"],["mov","video/quicktime"],["mp4","video/mp4"],["pdf","application/pdf"],["png","image/png"],["zip","application/zip"],["doc","application/msword"],["docx","application/vnd.openxmlformats-officedocument.wordprocessingml.document"]]);function Z(t,e){var n=function(t){var e=t.name;if(e&&-1!==e.lastIndexOf(".")&&!t.type){var n=e.split(".").pop().toLowerCase(),r=B.get(n);r&&Object.defineProperty(t,"type",{value:r,writable:!1,configurable:!1,enumerable:!0})}return t}(t);if("string"!=typeof n.path){var r=t.webkitRelativePath;Object.defineProperty(n,"path",{value:"string"==typeof e?e:"string"==typeof r&&r.length>0?r:t.name,writable:!1,configurable:!1,enumerable:!0})}return n}var H=[".DS_Store","Thumbs.db"];function Q(t){return N(this,void 0,void 0,(function(){return q(this,(function(e){return[2,(n=t,n.dataTransfer&&t.dataTransfer?J(t.dataTransfer,t.type):K(t))];var n}))}))}function K(t){return(null!==t.target&&t.target.files?X(t.target.files):[]).map((function(t){return Z(t)}))}function J(t,e){return N(this,void 0,void 0,(function(){var n;return q(this,(function(r){switch(r.label){case 0:return t.items?(n=X(t.items).filter((function(t){return"file"===t.kind})),"drop"!==e?[2,n]:[4,Promise.all(n.map(Y))]):[3,2];case 1:return[2,U(tt(r.sent()))];case 2:return[2,U(X(t.files).map((function(t){return Z(t)})))]}}))}))}function U(t){return t.filter((function(t){return-1===H.indexOf(t.name)}))}function X(t){for(var e=[],n=0;n<t.length;n++){var r=t[n];e.push(r)}return e}function Y(t){if("function"!=typeof t.webkitGetAsEntry)return et(t);var e=t.webkitGetAsEntry();return e&&e.isDirectory?rt(e):et(t)}function tt(t){return t.reduce((function(t,e){return function(){for(var t=[],e=0;e<arguments.length;e++)t=t.concat(V(arguments[e]));return t}(t,Array.isArray(e)?tt(e):[e])}),[])}function et(t){var e=t.getAsFile();if(!e)return Promise.reject(t+" is not a File");var n=Z(e);return Promise.resolve(n)}function nt(t){return N(this,void 0,void 0,(function(){return q(this,(function(e){return[2,t.isDirectory?rt(t):ot(t)]}))}))}function rt(t){var e=t.createReader();return new Promise((function(t,n){var r=[];!function o(){var a=this;e.readEntries((function(e){return N(a,void 0,void 0,(function(){var a,i,s;return q(this,(function(u){switch(u.label){case 0:if(e.length)return[3,5];u.label=1;case 1:return u.trys.push([1,3,,4]),[4,Promise.all(r)];case 2:return a=u.sent(),t(a),[3,4];case 3:return i=u.sent(),n(i),[3,4];case 4:return[3,6];case 5:s=Promise.all(e.map(nt)),r.push(s),o(),u.label=6;case 6:return[2]}}))}))}),(function(t){n(t)}))}()}))}function ot(t){return N(this,void 0,void 0,(function(){return q(this,(function(e){return[2,new Promise((function(e,n){t.file((function(n){var r=Z(n,t.fullPath);e(r)}),(function(t){n(t)}))}))]}))}))}const at=t=>{t=Array.isArray(t)&&1===t.length?t[0]:t;return{code:"file-invalid-type",message:`File type must be ${Array.isArray(t)?`one of ${t.join(", ")}`:t}`}},it=t=>({code:"file-too-large",message:`File is larger than ${t} bytes`}),st=t=>({code:"file-too-small",message:`File is smaller than ${t} bytes`}),ut={code:"too-many-files",message:"Too many files"};function ct(t,e){const n="application/x-moz-file"===t.type||function(t,e){if(t&&e){const n=Array.isArray(e)?e:e.split(","),r=t.name||"",o=(t.type||"").toLowerCase(),a=o.replace(/\/.*$/,"");return n.some((t=>{const e=t.trim().toLowerCase();return"."===e.charAt(0)?r.toLowerCase().endsWith(e):e.endsWith("/*")?a===e.replace(/\/.*$/,""):o===e}))}return!0}(t,e);return[n,n?null:at(e)]}function lt(t){return null!=t}function ht(t){return"function"==typeof t.isPropagationStopped?t.isPropagationStopped():void 0!==t.cancelBubble&&t.cancelBubble}function ft(t){return t.dataTransfer?Array.prototype.some.call(t.dataTransfer.types,(t=>"Files"===t||"application/x-moz-file"===t)):!!t.target&&!!t.target.files}function pt(t){t.preventDefault()}function dt(t){let e,n,r,a,i,g,y;const m=t[28].default,b=function(t,e,n,r){if(t){const o=s(t,e,n,r);return t[0](o)}}(m,t,t[27],null),k=b||function(t){let e;return{c(){e=h("p"),e.textContent="Drag 'n' drop some files here, or click to select files"},m(t,n){c(t,e,n)},d(t){t&&l(e)}}}();return{c(){e=h("div"),n=h("input"),r=f(),k&&k.c(),d(n,"accept",t[0]),n.multiple=t[1],d(n,"type","file"),d(n,"autocomplete","off"),d(n,"tabindex","-1"),v(n,"display","none"),d(e,"tabindex","0"),d(e,"class",a=(t[4]?"":"dropzone")+" "+t[2]+" svelte-817dg2"),d(e,"style",t[3])},m(o,a){c(o,e,a),u(e,n),t[29](n),u(e,r),k&&k.m(e,null),t[30](e),i=!0,g||(y=[p(n,"change",t[14]),p(n,"click",gt),p(e,"keydown",t[16](t[7])),p(e,"focus",t[16](t[8])),p(e,"blur",t[16](t[9])),p(e,"click",t[15](t[10])),p(e,"dragenter",t[17](t[11])),p(e,"dragover",t[17](t[12])),p(e,"dragleave",t[17](t[13])),p(e,"drop",t[17](t[14]))],g=!0)},p(t,r){(!i||1&r[0])&&d(n,"accept",t[0]),(!i||2&r[0])&&(n.multiple=t[1]),b&&b.p&&(!i||134217728&r[0])&&function(t,e,n,r,o,a){if(o){const i=s(e,n,r,a);t.p(i,o)}}(b,m,t,t[27],i?function(t,e,n,r){if(t[2]&&r){const o=t[2](r(n));if(void 0===e.dirty)return o;if("object"==typeof o){const t=[],n=Math.max(e.dirty.length,o.length);for(let r=0;r<n;r+=1)t[r]=e.dirty[r]|o[r];return t}return e.dirty|o}return e.dirty}(m,t[27],r,null):function(t){if(t.ctx.length>32){const e=[],n=t.ctx.length/32;for(let t=0;t<n;t++)e[t]=-1;return e}return-1}(t[27]),null),(!i||20&r[0]&&a!==(a=(t[4]?"":"dropzone")+" "+t[2]+" svelte-817dg2"))&&d(e,"class",a),(!i||8&r[0])&&d(e,"style",t[3])},i(t){i||(z(k,t),i=!0)},o(t){F(k,t),i=!1},d(n){n&&l(e),t[29](null),k&&k.d(n),t[30](null),g=!1,o(y)}}}function gt(t){t.stopPropagation()}function vt(t,e,n){let{$$slots:r={},$$scope:o}=e,{accept:a}=e,{disabled:i=!1}=e,{getFilesFromEvent:s=Q}=e,{maxSize:u=1/0}=e,{minSize:c=0}=e,{multiple:l=!0}=e,{preventDropOnDocument:h=!0}=e,{noClick:f=!1}=e,{noKeyboard:p=!1}=e,{noDrag:d=!1}=e,{noDragEventsBubbling:g=!1}=e,{containerClasses:v=""}=e,{containerStyles:y=""}=e,{disableDefaultStyles:m=!1}=e;const b=w();let x,S,O={isFocused:!1,isFileDialogActive:!1,isDragActive:!1,isDragAccept:!1,isDragReject:!1,draggedFiles:[],acceptedFiles:[],fileRejections:[]};function D(){S&&(n(6,S.value=null,S),O.isFileDialogActive=!0,S.click())}function $(t){return i?null:t}function A(t){g&&t.stopPropagation()}let E=[];function L(t){x&&x.contains(t.target)||(t.preventDefault(),E=[])}function _(){O.isFileDialogActive&&setTimeout((()=>{if(S){const{files:t}=S;t.length||(O.isFileDialogActive=!1,b("filedialogcancel"))}}),300)}var T;return M((()=>{window.addEventListener("focus",_,!1),h&&(document.addEventListener("dragover",pt,!1),document.addEventListener("drop",L,!1))})),T=()=>{window.removeEventListener("focus",_,!1),h&&(document.removeEventListener("dragover",pt),document.removeEventListener("drop",L))},k().$$.on_destroy.push(T),t.$$set=t=>{"accept"in t&&n(0,a=t.accept),"disabled"in t&&n(18,i=t.disabled),"getFilesFromEvent"in t&&n(19,s=t.getFilesFromEvent),"maxSize"in t&&n(20,u=t.maxSize),"minSize"in t&&n(21,c=t.minSize),"multiple"in t&&n(1,l=t.multiple),"preventDropOnDocument"in t&&n(22,h=t.preventDropOnDocument),"noClick"in t&&n(23,f=t.noClick),"noKeyboard"in t&&n(24,p=t.noKeyboard),"noDrag"in t&&n(25,d=t.noDrag),"noDragEventsBubbling"in t&&n(26,g=t.noDragEventsBubbling),"containerClasses"in t&&n(2,v=t.containerClasses),"containerStyles"in t&&n(3,y=t.containerStyles),"disableDefaultStyles"in t&&n(4,m=t.disableDefaultStyles),"$$scope"in t&&n(27,o=t.$$scope)},[a,l,v,y,m,x,S,function(t){x&&x.isEqualNode(t.target)&&(32!==t.keyCode&&13!==t.keyCode||(t.preventDefault(),D()))},function(){O.isFocused=!0},function(){O.isFocused=!1},function(){f||(!function(t=window.navigator.userAgent){return function(t){return-1!==t.indexOf("MSIE")||-1!==t.indexOf("Trident/")}(t)||function(t){return-1!==t.indexOf("Edge/")}(t)}()?D():setTimeout(D,0))},function(t){t.preventDefault(),A(t),E=[...E,t.target],ft(t)&&Promise.resolve(s(t)).then((e=>{ht(t)&&!g||(O.draggedFiles=e,O.isDragActive=!0,b("dragenter",{dragEvent:t}))}))},function(t){if(t.preventDefault(),A(t),t.dataTransfer)try{t.dataTransfer.dropEffect="copy"}catch{}return ft(t)&&b("dragover",{dragEvent:t}),!1},function(t){t.preventDefault(),A(t);const e=E.filter((t=>x&&x.contains(t))),n=e.indexOf(t.target);-1!==n&&e.splice(n,1),E=e,e.length>0||(O.isDragActive=!1,O.draggedFiles=[],ft(t)&&b("dragleave",{dragEvent:t}))},function(t){t.preventDefault(),A(t),E=[],ft(t)&&Promise.resolve(s(t)).then((e=>{if(ht(t)&&!g)return;const n=[],r=[];e.forEach((t=>{const[e,o]=ct(t,a),[i,s]=function(t,e,n){if(lt(t.size))if(lt(e)&&lt(n)){if(t.size>n)return[!1,it(n)];if(t.size<e)return[!1,st(e)]}else{if(lt(e)&&t.size<e)return[!1,st(e)];if(lt(n)&&t.size>n)return[!1,it(n)]}return[!0,null]}(t,c,u);if(e&&i)n.push(t);else{const e=[o,s].filter((t=>t));r.push({file:t,errors:e})}})),!l&&n.length>1&&(n.forEach((t=>{r.push({file:t,errors:[ut]})})),n.splice(0)),O.acceptedFiles=n,O.fileRejections=r,b("drop",{acceptedFiles:n,fileRejections:r,event:t}),r.length>0&&b("droprejected",{fileRejections:r,event:t}),n.length>0&&b("dropaccepted",{acceptedFiles:n,event:t})})),O.isFileDialogActive=!1,O.isDragActive=!1,O.draggedFiles=[],O.acceptedFiles=[],O.fileRejections=[]},$,function(t){return p?null:$(t)},function(t){return d?null:$(t)},i,s,u,c,h,f,p,d,g,o,r,function(t){P[t?"unshift":"push"]((()=>{S=t,n(6,S)}))},function(t){P[t?"unshift":"push"]((()=>{x=t,n(5,x)}))}]}class yt extends G{constructor(t){super(),R(this,t,vt,dt,i,{accept:0,disabled:18,getFilesFromEvent:19,maxSize:20,minSize:21,multiple:1,preventDropOnDocument:22,noClick:23,noKeyboard:24,noDrag:25,noDragEventsBubbling:26,containerClasses:2,containerStyles:3,disableDefaultStyles:4},null,[-1,-1])}}var mt=function(t,e){return(mt=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(t,e){t.__proto__=e}||function(t,e){for(var n in e)Object.prototype.hasOwnProperty.call(e,n)&&(t[n]=e[n])})(t,e)};function bt(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Class extends value "+String(e)+" is not a constructor or null");function n(){this.constructor=t}mt(t,e),t.prototype=null===e?Object.create(e):(n.prototype=e.prototype,new n)}var kt=function(){return(kt=Object.assign||function(t){for(var e,n=1,r=arguments.length;n<r;n++)for(var o in e=arguments[n])Object.prototype.hasOwnProperty.call(e,o)&&(t[o]=e[o]);return t}).apply(this,arguments)};function Mt(t,e,n){if(n||2===arguments.length)for(var r,o=0,a=e.length;o<a;o++)!r&&o in e||(r||(r=Array.prototype.slice.call(e,0,o)),r[o]=e[o]);return t.concat(r||Array.prototype.slice.call(e))}function wt(t,e,n){if(t&&t.length){var r=e[0],o=e[1],a=Math.PI/180*n,i=Math.cos(a),s=Math.sin(a);t.forEach((function(t){var e=t[0],n=t[1];t[0]=(e-r)*i-(n-o)*s+r,t[1]=(e-r)*s+(n-o)*i+o}))}}function xt(t){var e=t[0],n=t[1];return Math.sqrt(Math.pow(e[0]-n[0],2)+Math.pow(e[1]-n[1],2))}function Pt(t,e){var n=e.hachureAngle+90,r=e.hachureGap;r<0&&(r=4*e.strokeWidth),r=Math.max(r,.1);var o=[0,0];if(n)for(var a=0,i=t;a<i.length;a++)wt(i[a],o,n);var s=function(t,e){for(var n=[],r=0,o=t;r<o.length;r++)(c=Mt([],o[r],!0))[0].join(",")!==c[c.length-1].join(",")&&c.push([c[0][0],c[0][1]]),c.length>2&&n.push(c);var a=[];e=Math.max(e,.1);for(var i=[],s=0,u=n;s<u.length;s++)for(var c=u[s],l=0;l<c.length-1;l++){var h=c[l],f=c[l+1];if(h[1]!==f[1]){var p=Math.min(h[1],f[1]);i.push({ymin:p,ymax:Math.max(h[1],f[1]),x:p===h[1]?h[0]:f[0],islope:(f[0]-h[0])/(f[1]-h[1])})}}if(i.sort((function(t,e){return t.ymin<e.ymin?-1:t.ymin>e.ymin?1:t.x<e.x?-1:t.x>e.x?1:t.ymax===e.ymax?0:(t.ymax-e.ymax)/Math.abs(t.ymax-e.ymax)})),!i.length)return a;for(var d=[],g=i[0].ymin;d.length||i.length;){if(i.length){var v=-1;for(l=0;l<i.length&&!(i[l].ymin>g);l++)v=l;i.splice(0,v+1).forEach((function(t){d.push({s:g,edge:t})}))}if((d=d.filter((function(t){return!(t.edge.ymax<=g)}))).sort((function(t,e){return t.edge.x===e.edge.x?0:(t.edge.x-e.edge.x)/Math.abs(t.edge.x-e.edge.x)})),d.length>1)for(l=0;l<d.length;l+=2){var y=l+1;if(y>=d.length)break;var m=d[l].edge,b=d[y].edge;a.push([[Math.round(m.x),g],[Math.round(b.x),g]])}g+=e,d.forEach((function(t){t.edge.x=t.edge.x+e*t.edge.islope}))}return a}(t,r);if(n){for(var u=0,c=t;u<c.length;u++)wt(c[u],o,-n);!function(t,e,n){var r=[];t.forEach((function(t){return r.push.apply(r,t)})),wt(r,e,n)}(s,o,-n)}return s}var St=function(){function t(t){this.helper=t}return t.prototype.fillPolygons=function(t,e){return this._fillPolygons(t,e)},t.prototype._fillPolygons=function(t,e){var n=Pt(t,e);return{type:"fillSketch",ops:this.renderLines(n,e)}},t.prototype.renderLines=function(t,e){for(var n=[],r=0,o=t;r<o.length;r++){var a=o[r];n.push.apply(n,this.helper.doubleLineOps(a[0][0],a[0][1],a[1][0],a[1][1],e))}return n},t}(),Ot=function(t){function e(){return null!==t&&t.apply(this,arguments)||this}return bt(e,t),e.prototype.fillPolygons=function(t,e){var n=e.hachureGap;n<0&&(n=4*e.strokeWidth),n=Math.max(n,.1);for(var r=Pt(t,Object.assign({},e,{hachureGap:n})),o=Math.PI/180*e.hachureAngle,a=[],i=.5*n*Math.cos(o),s=.5*n*Math.sin(o),u=0,c=r;u<c.length;u++){var l=c[u],h=l[0],f=l[1];xt([h,f])&&a.push([[h[0]-i,h[1]+s],Mt([],f,!0)],[[h[0]+i,h[1]-s],Mt([],f,!0)])}return{type:"fillSketch",ops:this.renderLines(a,e)}},e}(St),Dt=function(t){function e(){return null!==t&&t.apply(this,arguments)||this}return bt(e,t),e.prototype.fillPolygons=function(t,e){var n=this._fillPolygons(t,e),r=Object.assign({},e,{hachureAngle:e.hachureAngle+90}),o=this._fillPolygons(t,r);return n.ops=n.ops.concat(o.ops),n},e}(St),$t=function(){function t(t){this.helper=t}return t.prototype.fillPolygons=function(t,e){var n=Pt(t,e=Object.assign({},e,{hachureAngle:0}));return this.dotsOnLines(n,e)},t.prototype.dotsOnLines=function(t,e){var n=[],r=e.hachureGap;r<0&&(r=4*e.strokeWidth),r=Math.max(r,.1);var o=e.fillWeight;o<0&&(o=e.strokeWidth/2);for(var a=r/4,i=0,s=t;i<s.length;i++)for(var u=s[i],c=xt(u),l=c/r,h=Math.ceil(l)-1,f=c-h*r,p=(u[0][0]+u[1][0])/2-r/4,d=Math.min(u[0][1],u[1][1]),g=0;g<h;g++){var v=d+f+g*r,y=p-a+2*Math.random()*a,m=v-a+2*Math.random()*a,b=this.helper.ellipse(y,m,o,o,e);n.push.apply(n,b.ops)}return{type:"fillSketch",ops:n}},t}(),At=function(){function t(t){this.helper=t}return t.prototype.fillPolygons=function(t,e){var n=Pt(t,e);return{type:"fillSketch",ops:this.dashedLine(n,e)}},t.prototype.dashedLine=function(t,e){var n=this,r=e.dashOffset<0?e.hachureGap<0?4*e.strokeWidth:e.hachureGap:e.dashOffset,o=e.dashGap<0?e.hachureGap<0?4*e.strokeWidth:e.hachureGap:e.dashGap,a=[];return t.forEach((function(t){var i=xt(t),s=Math.floor(i/(r+o)),u=(i+o-s*(r+o))/2,c=t[0],l=t[1];c[0]>l[0]&&(c=t[1],l=t[0]);for(var h=Math.atan((l[1]-c[1])/(l[0]-c[0])),f=0;f<s;f++){var p=f*(r+o),d=p+r,g=[c[0]+p*Math.cos(h)+u*Math.cos(h),c[1]+p*Math.sin(h)+u*Math.sin(h)],v=[c[0]+d*Math.cos(h)+u*Math.cos(h),c[1]+d*Math.sin(h)+u*Math.sin(h)];a.push.apply(a,n.helper.doubleLineOps(g[0],g[1],v[0],v[1],e))}})),a},t}(),Et=function(){function t(t){this.helper=t}return t.prototype.fillPolygons=function(t,e){var n=e.hachureGap<0?4*e.strokeWidth:e.hachureGap,r=e.zigzagOffset<0?n:e.zigzagOffset,o=Pt(t,e=Object.assign({},e,{hachureGap:n+r}));return{type:"fillSketch",ops:this.zigzagLines(o,r,e)}},t.prototype.zigzagLines=function(t,e,n){var r=this,o=[];return t.forEach((function(t){var a=xt(t),i=Math.round(a/(2*e)),s=t[0],u=t[1];s[0]>u[0]&&(s=t[1],u=t[0]);for(var c=Math.atan((u[1]-s[1])/(u[0]-s[0])),l=0;l<i;l++){var h=2*l*e,f=2*(l+1)*e,p=Math.sqrt(2*Math.pow(e,2)),d=[s[0]+h*Math.cos(c),s[1]+h*Math.sin(c)],g=[s[0]+f*Math.cos(c),s[1]+f*Math.sin(c)],v=[d[0]+p*Math.cos(c+Math.PI/4),d[1]+p*Math.sin(c+Math.PI/4)];o.push.apply(o,Mt(Mt([],r.helper.doubleLineOps(d[0],d[1],v[0],v[1],n),!1),r.helper.doubleLineOps(v[0],v[1],g[0],g[1],n),!1))}})),o},t}(),Lt={},_t=function(){function t(t){this.seed=t}return t.prototype.next=function(){return this.seed?(Math.pow(2,31)-1&(this.seed=Math.imul(48271,this.seed)))/Math.pow(2,31):Math.random()},t}();const Tt={A:7,a:7,C:6,c:6,H:1,h:1,L:2,l:2,M:2,m:2,Q:4,q:4,S:4,s:4,T:2,t:2,V:1,v:1,Z:0,z:0};function Ct(t,e){return t.type===e}function zt(t){const e=[],n=function(t){const e=new Array;for(;""!==t;)if(t.match(/^([ \t\r\n,]+)/))t=t.substr(RegExp.$1.length);else if(t.match(/^([aAcChHlLmMqQsStTvVzZ])/))e[e.length]={type:0,text:RegExp.$1},t=t.substr(RegExp.$1.length);else{if(!t.match(/^(([-+]?[0-9]+(\.[0-9]*)?|[-+]?\.[0-9]+)([eE][-+]?[0-9]+)?)/))return[];e[e.length]={type:1,text:`${parseFloat(RegExp.$1)}`},t=t.substr(RegExp.$1.length)}return e[e.length]={type:2,text:""},e}(t);let r="BOD",o=0,a=n[o];for(;!Ct(a,2);){let i=0;const s=[];if("BOD"===r){if("M"!==a.text&&"m"!==a.text)return zt("M0,0"+t);o++,i=Tt[a.text],r=a.text}else Ct(a,1)?i=Tt[r]:(o++,i=Tt[a.text],r=a.text);if(!(o+i<n.length))throw new Error("Path data ended short");for(let t=o;t<o+i;t++){const e=n[t];if(!Ct(e,1))throw new Error("Param not a number: "+r+","+e.text);s[s.length]=+e.text}if("number"!=typeof Tt[r])throw new Error("Bad segment: "+r);{const t={key:r,data:s};e.push(t),o+=i,a=n[o],"M"===r&&(r="L"),"m"===r&&(r="l")}}return e}function Ft(t){let e=0,n=0,r=0,o=0;const a=[];for(const{key:i,data:s}of t)switch(i){case"M":a.push({key:"M",data:[...s]}),[e,n]=s,[r,o]=s;break;case"m":e+=s[0],n+=s[1],a.push({key:"M",data:[e,n]}),r=e,o=n;break;case"L":a.push({key:"L",data:[...s]}),[e,n]=s;break;case"l":e+=s[0],n+=s[1],a.push({key:"L",data:[e,n]});break;case"C":a.push({key:"C",data:[...s]}),e=s[4],n=s[5];break;case"c":{const t=s.map(((t,r)=>r%2?t+n:t+e));a.push({key:"C",data:t}),e=t[4],n=t[5];break}case"Q":a.push({key:"Q",data:[...s]}),e=s[2],n=s[3];break;case"q":{const t=s.map(((t,r)=>r%2?t+n:t+e));a.push({key:"Q",data:t}),e=t[2],n=t[3];break}case"A":a.push({key:"A",data:[...s]}),e=s[5],n=s[6];break;case"a":e+=s[5],n+=s[6],a.push({key:"A",data:[s[0],s[1],s[2],s[3],s[4],e,n]});break;case"H":a.push({key:"H",data:[...s]}),e=s[0];break;case"h":e+=s[0],a.push({key:"H",data:[e]});break;case"V":a.push({key:"V",data:[...s]}),n=s[0];break;case"v":n+=s[0],a.push({key:"V",data:[n]});break;case"S":a.push({key:"S",data:[...s]}),e=s[2],n=s[3];break;case"s":{const t=s.map(((t,r)=>r%2?t+n:t+e));a.push({key:"S",data:t}),e=t[2],n=t[3];break}case"T":a.push({key:"T",data:[...s]}),e=s[0],n=s[1];break;case"t":e+=s[0],n+=s[1],a.push({key:"T",data:[e,n]});break;case"Z":case"z":a.push({key:"Z",data:[]}),e=r,n=o}return a}function jt(t){const e=[];let n="",r=0,o=0,a=0,i=0,s=0,u=0;for(const{key:c,data:l}of t){switch(c){case"M":e.push({key:"M",data:[...l]}),[r,o]=l,[a,i]=l;break;case"C":e.push({key:"C",data:[...l]}),r=l[4],o=l[5],s=l[2],u=l[3];break;case"L":e.push({key:"L",data:[...l]}),[r,o]=l;break;case"H":r=l[0],e.push({key:"L",data:[r,o]});break;case"V":o=l[0],e.push({key:"L",data:[r,o]});break;case"S":{let t=0,a=0;"C"===n||"S"===n?(t=r+(r-s),a=o+(o-u)):(t=r,a=o),e.push({key:"C",data:[t,a,...l]}),s=l[0],u=l[1],r=l[2],o=l[3];break}case"T":{const[t,a]=l;let i=0,c=0;"Q"===n||"T"===n?(i=r+(r-s),c=o+(o-u)):(i=r,c=o);const h=r+2*(i-r)/3,f=o+2*(c-o)/3,p=t+2*(i-t)/3,d=a+2*(c-a)/3;e.push({key:"C",data:[h,f,p,d,t,a]}),s=i,u=c,r=t,o=a;break}case"Q":{const[t,n,a,i]=l,c=r+2*(t-r)/3,h=o+2*(n-o)/3,f=a+2*(t-a)/3,p=i+2*(n-i)/3;e.push({key:"C",data:[c,h,f,p,a,i]}),s=t,u=n,r=a,o=i;break}case"A":{const t=Math.abs(l[0]),n=Math.abs(l[1]),a=l[2],i=l[3],s=l[4],u=l[5],c=l[6];0===t||0===n?(e.push({key:"C",data:[r,o,u,c,u,c]}),r=u,o=c):r===u&&o===c||(Wt(r,o,u,c,t,n,a,i,s).forEach((function(t){e.push({key:"C",data:t})})),r=u,o=c);break}case"Z":e.push({key:"Z",data:[]}),r=a,o=i}n=c}return e}function It(t,e,n){return[t*Math.cos(n)-e*Math.sin(n),t*Math.sin(n)+e*Math.cos(n)]}function Wt(t,e,n,r,o,a,i,s,u,c){const l=(h=i,Math.PI*h/180);var h;let f=[],p=0,d=0,g=0,v=0;if(c)[p,d,g,v]=c;else{[t,e]=It(t,e,-l),[n,r]=It(n,r,-l);const i=(t-n)/2,c=(e-r)/2;let h=i*i/(o*o)+c*c/(a*a);h>1&&(h=Math.sqrt(h),o*=h,a*=h);const f=o*o,y=a*a,m=f*y-f*c*c-y*i*i,b=f*c*c+y*i*i,k=(s===u?-1:1)*Math.sqrt(Math.abs(m/b));g=k*o*c/a+(t+n)/2,v=k*-a*i/o+(e+r)/2,p=Math.asin(parseFloat(((e-v)/a).toFixed(9))),d=Math.asin(parseFloat(((r-v)/a).toFixed(9))),t<g&&(p=Math.PI-p),n<g&&(d=Math.PI-d),p<0&&(p=2*Math.PI+p),d<0&&(d=2*Math.PI+d),u&&p>d&&(p-=2*Math.PI),!u&&d>p&&(d-=2*Math.PI)}let y=d-p;if(Math.abs(y)>120*Math.PI/180){const t=d,e=n,s=r;d=u&&d>p?p+120*Math.PI/180*1:p+120*Math.PI/180*-1,f=Wt(n=g+o*Math.cos(d),r=v+a*Math.sin(d),e,s,o,a,i,0,u,[d,t,g,v])}y=d-p;const m=Math.cos(p),b=Math.sin(p),k=Math.cos(d),M=Math.sin(d),w=Math.tan(y/4),x=4/3*o*w,P=4/3*a*w,S=[t,e],O=[t+x*b,e-P*m],D=[n+x*M,r-P*k],$=[n,r];if(O[0]=2*S[0]-O[0],O[1]=2*S[1]-O[1],c)return[O,D,$].concat(f);{f=[O,D,$].concat(f);const t=[];for(let e=0;e<f.length;e+=3){const n=It(f[e][0],f[e][1],l),r=It(f[e+1][0],f[e+1][1],l),o=It(f[e+2][0],f[e+2][1],l);t.push([n[0],n[1],r[0],r[1],o[0],o[1]])}return t}}var Rt={randOffset:function(t,e){return Ut(t,e)},randOffsetWithRange:function(t,e,n){return Jt(t,e,n)},ellipse:function(t,e,n,r,o){return Bt(t,e,o,Vt(n,r,o)).opset},doubleLineOps:function(t,e,n,r,o){return Xt(t,e,n,r,o,!0)}};function Gt(t,e,n,r,o){return{type:"path",ops:Xt(t,e,n,r,o)}}function Nt(t,e,n){var r=(t||[]).length;if(r>2){for(var o=[],a=0;a<r-1;a++)o.push.apply(o,Xt(t[a][0],t[a][1],t[a+1][0],t[a+1][1],n));return e&&o.push.apply(o,Xt(t[r-1][0],t[r-1][1],t[0][0],t[0][1],n)),{type:"path",ops:o}}return 2===r?Gt(t[0][0],t[0][1],t[1][0],t[1][1],n):{type:"path",ops:[]}}function qt(t,e){var n=te(t,1*(1+.2*e.roughness),e);if(!e.disableMultiStroke){var r=te(t,1.5*(1+.22*e.roughness),function(t){var e=kt({},t);return e.randomizer=void 0,t.seed&&(e.seed=t.seed+1),e}(e));n=n.concat(r)}return{type:"path",ops:n}}function Vt(t,e,n){var r=Math.sqrt(2*Math.PI*Math.sqrt((Math.pow(t/2,2)+Math.pow(e/2,2))/2)),o=Math.ceil(Math.max(n.curveStepCount,n.curveStepCount/Math.sqrt(200)*r)),a=2*Math.PI/o,i=Math.abs(t/2),s=Math.abs(e/2),u=1-n.curveFitting;return{increment:a,rx:i+=Ut(i*u,n),ry:s+=Ut(s*u,n)}}function Bt(t,e,n,r){var o=ne(r.increment,t,e,r.rx,r.ry,1,r.increment*Jt(.1,Jt(.4,1,n),n),n),a=o[0],i=o[1],s=ee(a,null,n);if(!n.disableMultiStroke&&0!==n.roughness){var u=ee(ne(r.increment,t,e,r.rx,r.ry,1.5,0,n)[0],null,n);s=s.concat(u)}return{estimatedPoints:i,opset:{type:"path",ops:s}}}function Zt(t,e,n,r,o,a,i,s,u){var c=t,l=e,h=Math.abs(n/2),f=Math.abs(r/2);h+=Ut(.01*h,u),f+=Ut(.01*f,u);for(var p=o,d=a;p<0;)p+=2*Math.PI,d+=2*Math.PI;d-p>2*Math.PI&&(p=0,d=2*Math.PI);var g=2*Math.PI/u.curveStepCount,v=Math.min(g/2,(d-p)/2),y=re(v,c,l,h,f,p,d,1,u);if(!u.disableMultiStroke){var m=re(v,c,l,h,f,p,d,1.5,u);y.push.apply(y,m)}return i&&(s?y.push.apply(y,Mt(Mt([],Xt(c,l,c+h*Math.cos(p),l+f*Math.sin(p),u),!1),Xt(c,l,c+h*Math.cos(d),l+f*Math.sin(d),u),!1)):y.push({op:"lineTo",data:[c,l]},{op:"lineTo",data:[c+h*Math.cos(p),l+f*Math.sin(p)]})),{type:"path",ops:y}}function Ht(t,e){for(var n=[],r=0,o=t;r<o.length;r++){var a=o[r];if(a.length){var i=e.maxRandomnessOffset||0,s=a.length;if(s>2){n.push({op:"move",data:[a[0][0]+Ut(i,e),a[0][1]+Ut(i,e)]});for(var u=1;u<s;u++)n.push({op:"lineTo",data:[a[u][0]+Ut(i,e),a[u][1]+Ut(i,e)]})}}}return{type:"fillPath",ops:n}}function Qt(t,e){return function(t,e){var n=t.fillStyle||"hachure";if(!Lt[n])switch(n){case"zigzag":Lt[n]||(Lt[n]=new Ot(e));break;case"cross-hatch":Lt[n]||(Lt[n]=new Dt(e));break;case"dots":Lt[n]||(Lt[n]=new $t(e));break;case"dashed":Lt[n]||(Lt[n]=new At(e));break;case"zigzag-line":Lt[n]||(Lt[n]=new Et(e));break;default:Lt[n="hachure"]||(Lt[n]=new St(e))}return Lt[n]}(e,Rt).fillPolygons(t,e)}function Kt(t){return t.randomizer||(t.randomizer=new _t(t.seed||0)),t.randomizer.next()}function Jt(t,e,n,r){return void 0===r&&(r=1),n.roughness*r*(Kt(n)*(e-t)+t)}function Ut(t,e,n){return void 0===n&&(n=1),Jt(-t,t,e,n)}function Xt(t,e,n,r,o,a){void 0===a&&(a=!1);var i=a?o.disableMultiStrokeFill:o.disableMultiStroke,s=Yt(t,e,n,r,o,!0,!1);if(i)return s;var u=Yt(t,e,n,r,o,!0,!0);return s.concat(u)}function Yt(t,e,n,r,o,a,i){var s,u=Math.pow(t-n,2)+Math.pow(e-r,2),c=Math.sqrt(u);s=c<200?1:c>500?.4:-.0016668*c+1.233334;var l=o.maxRandomnessOffset||0;l*l*100>u&&(l=c/10);var h=l/2,f=.2+.2*Kt(o),p=o.bowing*o.maxRandomnessOffset*(r-e)/200,d=o.bowing*o.maxRandomnessOffset*(t-n)/200;p=Ut(p,o,s),d=Ut(d,o,s);var g=[],v=function(){return Ut(h,o,s)},y=function(){return Ut(l,o,s)},m=o.preserveVertices;return a&&(i?g.push({op:"move",data:[t+(m?0:v()),e+(m?0:v())]}):g.push({op:"move",data:[t+(m?0:Ut(l,o,s)),e+(m?0:Ut(l,o,s))]})),i?g.push({op:"bcurveTo",data:[p+t+(n-t)*f+v(),d+e+(r-e)*f+v(),p+t+2*(n-t)*f+v(),d+e+2*(r-e)*f+v(),n+(m?0:v()),r+(m?0:v())]}):g.push({op:"bcurveTo",data:[p+t+(n-t)*f+y(),d+e+(r-e)*f+y(),p+t+2*(n-t)*f+y(),d+e+2*(r-e)*f+y(),n+(m?0:y()),r+(m?0:y())]}),g}function te(t,e,n){var r=[];r.push([t[0][0]+Ut(e,n),t[0][1]+Ut(e,n)]),r.push([t[0][0]+Ut(e,n),t[0][1]+Ut(e,n)]);for(var o=1;o<t.length;o++)r.push([t[o][0]+Ut(e,n),t[o][1]+Ut(e,n)]),o===t.length-1&&r.push([t[o][0]+Ut(e,n),t[o][1]+Ut(e,n)]);return ee(r,null,n)}function ee(t,e,n){var r=t.length,o=[];if(r>3){var a=[],i=1-n.curveTightness;o.push({op:"move",data:[t[1][0],t[1][1]]});for(var s=1;s+2<r;s++){var u=t[s];a[0]=[u[0],u[1]],a[1]=[u[0]+(i*t[s+1][0]-i*t[s-1][0])/6,u[1]+(i*t[s+1][1]-i*t[s-1][1])/6],a[2]=[t[s+1][0]+(i*t[s][0]-i*t[s+2][0])/6,t[s+1][1]+(i*t[s][1]-i*t[s+2][1])/6],a[3]=[t[s+1][0],t[s+1][1]],o.push({op:"bcurveTo",data:[a[1][0],a[1][1],a[2][0],a[2][1],a[3][0],a[3][1]]})}if(e&&2===e.length){var c=n.maxRandomnessOffset;o.push({op:"lineTo",data:[e[0]+Ut(c,n),e[1]+Ut(c,n)]})}}else 3===r?(o.push({op:"move",data:[t[1][0],t[1][1]]}),o.push({op:"bcurveTo",data:[t[1][0],t[1][1],t[2][0],t[2][1],t[2][0],t[2][1]]})):2===r&&o.push.apply(o,Xt(t[0][0],t[0][1],t[1][0],t[1][1],n));return o}function ne(t,e,n,r,o,a,i,s){var u=[],c=[];if(0===s.roughness){t/=4,c.push([e+r*Math.cos(-t),n+o*Math.sin(-t)]);for(var l=0;l<=2*Math.PI;l+=t){var h=[e+r*Math.cos(l),n+o*Math.sin(l)];u.push(h),c.push(h)}c.push([e+r*Math.cos(0),n+o*Math.sin(0)]),c.push([e+r*Math.cos(t),n+o*Math.sin(t)])}else{var f=Ut(.5,s)-Math.PI/2;c.push([Ut(a,s)+e+.9*r*Math.cos(f-t),Ut(a,s)+n+.9*o*Math.sin(f-t)]);var p=2*Math.PI+f-.01;for(l=f;l<p;l+=t)h=[Ut(a,s)+e+r*Math.cos(l),Ut(a,s)+n+o*Math.sin(l)],u.push(h),c.push(h);c.push([Ut(a,s)+e+r*Math.cos(f+2*Math.PI+.5*i),Ut(a,s)+n+o*Math.sin(f+2*Math.PI+.5*i)]),c.push([Ut(a,s)+e+.98*r*Math.cos(f+i),Ut(a,s)+n+.98*o*Math.sin(f+i)]),c.push([Ut(a,s)+e+.9*r*Math.cos(f+.5*i),Ut(a,s)+n+.9*o*Math.sin(f+.5*i)])}return[c,u]}function re(t,e,n,r,o,a,i,s,u){var c=a+Ut(.1,u),l=[];l.push([Ut(s,u)+e+.9*r*Math.cos(c-t),Ut(s,u)+n+.9*o*Math.sin(c-t)]);for(var h=c;h<=i;h+=t)l.push([Ut(s,u)+e+r*Math.cos(h),Ut(s,u)+n+o*Math.sin(h)]);return l.push([e+r*Math.cos(i),n+o*Math.sin(i)]),l.push([e+r*Math.cos(i),n+o*Math.sin(i)]),ee(l,null,u)}function oe(t){return[...t]}function ae(t,e){return Math.pow(t[0]-e[0],2)+Math.pow(t[1]-e[1],2)}function ie(t,e,n){const r=ae(e,n);if(0===r)return ae(t,e);let o=((t[0]-e[0])*(n[0]-e[0])+(t[1]-e[1])*(n[1]-e[1]))/r;return o=Math.max(0,Math.min(1,o)),ae(t,se(e,n,o))}function se(t,e,n){return[t[0]+(e[0]-t[0])*n,t[1]+(e[1]-t[1])*n]}function ue(t,e,n,r){const o=r||[];if(function(t,e){const n=t[e+0],r=t[e+1],o=t[e+2],a=t[e+3];let i=3*r[0]-2*n[0]-a[0];i*=i;let s=3*r[1]-2*n[1]-a[1];s*=s;let u=3*o[0]-2*a[0]-n[0];u*=u;let c=3*o[1]-2*a[1]-n[1];return c*=c,i<u&&(i=u),s<c&&(s=c),i+s}(t,e)<n){const n=t[e+0];o.length?(a=o[o.length-1],i=n,Math.sqrt(ae(a,i))>1&&o.push(n)):o.push(n),o.push(t[e+3])}else{const r=.5,a=t[e+0],i=t[e+1],s=t[e+2],u=t[e+3],c=se(a,i,r),l=se(i,s,r),h=se(s,u,r),f=se(c,l,r),p=se(l,h,r),d=se(f,p,r);ue([a,c,f,d],0,n,o),ue([d,p,h,u],0,n,o)}var a,i;return o}function ce(t,e){return le(t,0,t.length,e)}function le(t,e,n,r,o){const a=o||[],i=t[e],s=t[n-1];let u=0,c=1;for(let r=e+1;r<n-1;++r){const e=ie(t[r],i,s);e>u&&(u=e,c=r)}return Math.sqrt(u)>r?(le(t,e,c+1,r,a),le(t,c,n,r,a)):(a.length||a.push(i),a.push(s)),a}function he(t,e=.15,n){const r=[],o=(t.length-1)/3;for(let n=0;n<o;n++)ue(t,3*n,e,r);return n&&n>0?le(r,0,r.length,n):r}var fe="none",pe=function(){function t(t){this.defaultOptions={maxRandomnessOffset:2,roughness:1,bowing:1,stroke:"#000",strokeWidth:1,curveTightness:0,curveFitting:.95,curveStepCount:9,fillStyle:"hachure",fillWeight:-1,hachureAngle:-41,hachureGap:-1,dashOffset:-1,dashGap:-1,zigzagOffset:-1,seed:0,disableMultiStroke:!1,disableMultiStrokeFill:!1,preserveVertices:!1},this.config=t||{},this.config.options&&(this.defaultOptions=this._o(this.config.options))}return t.newSeed=function(){return Math.floor(Math.random()*Math.pow(2,31))},t.prototype._o=function(t){return t?Object.assign({},this.defaultOptions,t):this.defaultOptions},t.prototype._d=function(t,e,n){return{shape:t,sets:e||[],options:n||this.defaultOptions}},t.prototype.line=function(t,e,n,r,o){var a=this._o(o);return this._d("line",[Gt(t,e,n,r,a)],a)},t.prototype.rectangle=function(t,e,n,r,o){var a=this._o(o),i=[],s=function(t,e,n,r,o){return function(t,e){return Nt(t,!0,e)}([[t,e],[t+n,e],[t+n,e+r],[t,e+r]],o)}(t,e,n,r,a);if(a.fill){var u=[[t,e],[t+n,e],[t+n,e+r],[t,e+r]];"solid"===a.fillStyle?i.push(Ht([u],a)):i.push(Qt([u],a))}return a.stroke!==fe&&i.push(s),this._d("rectangle",i,a)},t.prototype.ellipse=function(t,e,n,r,o){var a=this._o(o),i=[],s=Vt(n,r,a),u=Bt(t,e,a,s);if(a.fill)if("solid"===a.fillStyle){var c=Bt(t,e,a,s).opset;c.type="fillPath",i.push(c)}else i.push(Qt([u.estimatedPoints],a));return a.stroke!==fe&&i.push(u.opset),this._d("ellipse",i,a)},t.prototype.circle=function(t,e,n,r){var o=this.ellipse(t,e,n,n,r);return o.shape="circle",o},t.prototype.linearPath=function(t,e){var n=this._o(e);return this._d("linearPath",[Nt(t,!1,n)],n)},t.prototype.arc=function(t,e,n,r,o,a,i,s){void 0===i&&(i=!1);var u=this._o(s),c=[],l=Zt(t,e,n,r,o,a,i,!0,u);if(i&&u.fill)if("solid"===u.fillStyle){var h=kt({},u);h.disableMultiStroke=!0;var f=Zt(t,e,n,r,o,a,!0,!1,h);f.type="fillPath",c.push(f)}else c.push(function(t,e,n,r,o,a,i){var s=t,u=e,c=Math.abs(n/2),l=Math.abs(r/2);c+=Ut(.01*c,i),l+=Ut(.01*l,i);for(var h=o,f=a;h<0;)h+=2*Math.PI,f+=2*Math.PI;f-h>2*Math.PI&&(h=0,f=2*Math.PI);for(var p=(f-h)/i.curveStepCount,d=[],g=h;g<=f;g+=p)d.push([s+c*Math.cos(g),u+l*Math.sin(g)]);return d.push([s+c*Math.cos(f),u+l*Math.sin(f)]),d.push([s,u]),Qt([d],i)}(t,e,n,r,o,a,u));return u.stroke!==fe&&c.push(l),this._d("arc",c,u)},t.prototype.curve=function(t,e){var n=this._o(e),r=[],o=qt(t,n);if(n.fill&&n.fill!==fe&&t.length>=3){var a=he(function(t,e=0){const n=t.length;if(n<3)throw new Error("A curve must have at least three points.");const r=[];if(3===n)r.push(oe(t[0]),oe(t[1]),oe(t[2]),oe(t[2]));else{const n=[];n.push(t[0],t[0]);for(let e=1;e<t.length;e++)n.push(t[e]),e===t.length-1&&n.push(t[e]);const o=[],a=1-e;r.push(oe(n[0]));for(let t=1;t+2<n.length;t++){const e=n[t];o[0]=[e[0],e[1]],o[1]=[e[0]+(a*n[t+1][0]-a*n[t-1][0])/6,e[1]+(a*n[t+1][1]-a*n[t-1][1])/6],o[2]=[n[t+1][0]+(a*n[t][0]-a*n[t+2][0])/6,n[t+1][1]+(a*n[t][1]-a*n[t+2][1])/6],o[3]=[n[t+1][0],n[t+1][1]],r.push(o[1],o[2],o[3])}}return r}(t),10,(1+n.roughness)/2);"solid"===n.fillStyle?r.push(Ht([a],n)):r.push(Qt([a],n))}return n.stroke!==fe&&r.push(o),this._d("curve",r,n)},t.prototype.polygon=function(t,e){var n=this._o(e),r=[],o=Nt(t,!0,n);return n.fill&&("solid"===n.fillStyle?r.push(Ht([t],n)):r.push(Qt([t],n))),n.stroke!==fe&&r.push(o),this._d("polygon",r,n)},t.prototype.path=function(t,e){var n=this._o(e),r=[];if(!t)return this._d("path",r,n);t=(t||"").replace(/\n/g," ").replace(/(-\s)/g,"-").replace("/(ss)/g"," ");var o=n.fill&&"transparent"!==n.fill&&n.fill!==fe,a=n.stroke!==fe,i=!!(n.simplification&&n.simplification<1),s=function(t,e,n){const r=jt(Ft(zt(t))),o=[];let a=[],i=[0,0],s=[];const u=()=>{s.length>=4&&a.push(...he(s,1)),s=[]},c=()=>{u(),a.length&&(o.push(a),a=[])};for(const{key:t,data:e}of r)switch(t){case"M":c(),i=[e[0],e[1]],a.push(i);break;case"L":u(),a.push([e[0],e[1]]);break;case"C":if(!s.length){const t=a.length?a[a.length-1]:i;s.push([t[0],t[1]])}s.push([e[0],e[1]]),s.push([e[2],e[3]]),s.push([e[4],e[5]]);break;case"Z":u(),a.push([i[0],i[1]])}if(c(),!n)return o;const l=[];for(const t of o){const e=ce(t,n);e.length&&l.push(e)}return l}(t,0,i?4-4*n.simplification:(1+n.roughness)/2);return o&&("solid"===n.fillStyle?r.push(Ht(s,n)):r.push(Qt(s,n))),a&&(i?s.forEach((function(t){r.push(Nt(t,!1,n))})):r.push(function(t,e){for(var n=jt(Ft(zt(t))),r=[],o=[0,0],a=[0,0],i=function(t,n){switch(t){case"M":var i=1*(e.maxRandomnessOffset||0),s=e.preserveVertices;r.push({op:"move",data:n.map((function(t){return t+(s?0:Ut(i,e))}))}),a=[n[0],n[1]],o=[n[0],n[1]];break;case"L":r.push.apply(r,Xt(a[0],a[1],n[0],n[1],e)),a=[n[0],n[1]];break;case"C":var u=n[0],c=n[1],l=n[2],h=n[3],f=n[4],p=n[5];r.push.apply(r,function(t,e,n,r,o,a,i,s){for(var u=[],c=[s.maxRandomnessOffset||1,(s.maxRandomnessOffset||1)+.3],l=[0,0],h=s.disableMultiStroke?1:2,f=s.preserveVertices,p=0;p<h;p++)0===p?u.push({op:"move",data:[i[0],i[1]]}):u.push({op:"move",data:[i[0]+(f?0:Ut(c[0],s)),i[1]+(f?0:Ut(c[0],s))]}),l=f?[o,a]:[o+Ut(c[p],s),a+Ut(c[p],s)],u.push({op:"bcurveTo",data:[t+Ut(c[p],s),e+Ut(c[p],s),n+Ut(c[p],s),r+Ut(c[p],s),l[0],l[1]]});return u}(u,c,l,h,f,p,a,e)),a=[f,p];break;case"Z":r.push.apply(r,Xt(a[0],a[1],o[0],o[1],e)),a=[o[0],o[1]]}},s=0,u=n;s<u.length;s++){var c=u[s];i(c.key,c.data)}return{type:"path",ops:r}}(t,n))),this._d("path",r,n)},t.prototype.opsToPath=function(t,e){for(var n="",r=0,o=t.ops;r<o.length;r++){var a=o[r],i="number"==typeof e&&e>=0?a.data.map((function(t){return+t.toFixed(e)})):a.data;switch(a.op){case"move":n+="M".concat(i[0]," ").concat(i[1]," ");break;case"bcurveTo":n+="C".concat(i[0]," ").concat(i[1],", ").concat(i[2]," ").concat(i[3],", ").concat(i[4]," ").concat(i[5]," ");break;case"lineTo":n+="L".concat(i[0]," ").concat(i[1]," ")}}return n.trim()},t.prototype.toPaths=function(t){for(var e=t.sets||[],n=t.options||this.defaultOptions,r=[],o=0,a=e;o<a.length;o++){var i=a[o],s=null;switch(i.type){case"path":s={d:this.opsToPath(i),stroke:n.stroke,strokeWidth:n.strokeWidth,fill:fe};break;case"fillPath":s={d:this.opsToPath(i),stroke:fe,strokeWidth:0,fill:n.fill||fe};break;case"fillSketch":s=this.fillSketch(i,n)}s&&r.push(s)}return r},t.prototype.fillSketch=function(t,e){var n=e.fillWeight;return n<0&&(n=e.strokeWidth/2),{d:this.opsToPath(t),stroke:e.fill||fe,strokeWidth:n,fill:fe}},t}(),de=function(){function t(t,e){this.canvas=t,this.ctx=this.canvas.getContext("2d"),this.gen=new pe(e)}return t.prototype.draw=function(t){for(var e=t.sets||[],n=t.options||this.getDefaultOptions(),r=this.ctx,o=t.options.fixedDecimalPlaceDigits,a=0,i=e;a<i.length;a++){var s=i[a];switch(s.type){case"path":r.save(),r.strokeStyle="none"===n.stroke?"transparent":n.stroke,r.lineWidth=n.strokeWidth,n.strokeLineDash&&r.setLineDash(n.strokeLineDash),n.strokeLineDashOffset&&(r.lineDashOffset=n.strokeLineDashOffset),this._drawToContext(r,s,o),r.restore();break;case"fillPath":r.save(),r.fillStyle=n.fill||"";var u="curve"===t.shape||"polygon"===t.shape||"path"===t.shape?"evenodd":"nonzero";this._drawToContext(r,s,o,u),r.restore();break;case"fillSketch":this.fillSketch(r,s,n)}}},t.prototype.fillSketch=function(t,e,n){var r=n.fillWeight;r<0&&(r=n.strokeWidth/2),t.save(),n.fillLineDash&&t.setLineDash(n.fillLineDash),n.fillLineDashOffset&&(t.lineDashOffset=n.fillLineDashOffset),t.strokeStyle=n.fill||"",t.lineWidth=r,this._drawToContext(t,e,n.fixedDecimalPlaceDigits),t.restore()},t.prototype._drawToContext=function(t,e,n,r){void 0===r&&(r="nonzero"),t.beginPath();for(var o=0,a=e.ops;o<a.length;o++){var i=a[o],s="number"==typeof n&&n>=0?i.data.map((function(t){return+t.toFixed(n)})):i.data;switch(i.op){case"move":t.moveTo(s[0],s[1]);break;case"bcurveTo":t.bezierCurveTo(s[0],s[1],s[2],s[3],s[4],s[5]);break;case"lineTo":t.lineTo(s[0],s[1])}}"fillPath"===e.type?t.fill(r):t.stroke()},Object.defineProperty(t.prototype,"generator",{get:function(){return this.gen},enumerable:!1,configurable:!0}),t.prototype.getDefaultOptions=function(){return this.gen.defaultOptions},t.prototype.line=function(t,e,n,r,o){var a=this.gen.line(t,e,n,r,o);return this.draw(a),a},t.prototype.rectangle=function(t,e,n,r,o){var a=this.gen.rectangle(t,e,n,r,o);return this.draw(a),a},t.prototype.ellipse=function(t,e,n,r,o){var a=this.gen.ellipse(t,e,n,r,o);return this.draw(a),a},t.prototype.circle=function(t,e,n,r){var o=this.gen.circle(t,e,n,r);return this.draw(o),o},t.prototype.linearPath=function(t,e){var n=this.gen.linearPath(t,e);return this.draw(n),n},t.prototype.polygon=function(t,e){var n=this.gen.polygon(t,e);return this.draw(n),n},t.prototype.arc=function(t,e,n,r,o,a,i,s){void 0===i&&(i=!1);var u=this.gen.arc(t,e,n,r,o,a,i,s);return this.draw(u),u},t.prototype.curve=function(t,e){var n=this.gen.curve(t,e);return this.draw(n),n},t.prototype.path=function(t,e){var n=this.gen.path(t,e);return this.draw(n),n},t}(),ge="http://www.w3.org/2000/svg",ve=function(){function t(t,e){this.svg=t,this.gen=new pe(e)}return t.prototype.draw=function(t){for(var e=t.sets||[],n=t.options||this.getDefaultOptions(),r=this.svg.ownerDocument||window.document,o=r.createElementNS(ge,"g"),a=t.options.fixedDecimalPlaceDigits,i=0,s=e;i<s.length;i++){var u=s[i],c=null;switch(u.type){case"path":(c=r.createElementNS(ge,"path")).setAttribute("d",this.opsToPath(u,a)),c.setAttribute("stroke",n.stroke),c.setAttribute("stroke-width",n.strokeWidth+""),c.setAttribute("fill","none"),n.strokeLineDash&&c.setAttribute("stroke-dasharray",n.strokeLineDash.join(" ").trim()),n.strokeLineDashOffset&&c.setAttribute("stroke-dashoffset","".concat(n.strokeLineDashOffset));break;case"fillPath":(c=r.createElementNS(ge,"path")).setAttribute("d",this.opsToPath(u,a)),c.setAttribute("stroke","none"),c.setAttribute("stroke-width","0"),c.setAttribute("fill",n.fill||""),"curve"!==t.shape&&"polygon"!==t.shape||c.setAttribute("fill-rule","evenodd");break;case"fillSketch":c=this.fillSketch(r,u,n)}c&&o.appendChild(c)}return o},t.prototype.fillSketch=function(t,e,n){var r=n.fillWeight;r<0&&(r=n.strokeWidth/2);var o=t.createElementNS(ge,"path");return o.setAttribute("d",this.opsToPath(e,n.fixedDecimalPlaceDigits)),o.setAttribute("stroke",n.fill||""),o.setAttribute("stroke-width",r+""),o.setAttribute("fill","none"),n.fillLineDash&&o.setAttribute("stroke-dasharray",n.fillLineDash.join(" ").trim()),n.fillLineDashOffset&&o.setAttribute("stroke-dashoffset","".concat(n.fillLineDashOffset)),o},Object.defineProperty(t.prototype,"generator",{get:function(){return this.gen},enumerable:!1,configurable:!0}),t.prototype.getDefaultOptions=function(){return this.gen.defaultOptions},t.prototype.opsToPath=function(t,e){return this.gen.opsToPath(t,e)},t.prototype.line=function(t,e,n,r,o){var a=this.gen.line(t,e,n,r,o);return this.draw(a)},t.prototype.rectangle=function(t,e,n,r,o){var a=this.gen.rectangle(t,e,n,r,o);return this.draw(a)},t.prototype.ellipse=function(t,e,n,r,o){var a=this.gen.ellipse(t,e,n,r,o);return this.draw(a)},t.prototype.circle=function(t,e,n,r){var o=this.gen.circle(t,e,n,r);return this.draw(o)},t.prototype.linearPath=function(t,e){var n=this.gen.linearPath(t,e);return this.draw(n)},t.prototype.polygon=function(t,e){var n=this.gen.polygon(t,e);return this.draw(n)},t.prototype.arc=function(t,e,n,r,o,a,i,s){void 0===i&&(i=!1);var u=this.gen.arc(t,e,n,r,o,a,i,s);return this.draw(u)},t.prototype.curve=function(t,e){var n=this.gen.curve(t,e);return this.draw(n)},t.prototype.path=function(t,e){var n=this.gen.path(t,e);return this.draw(n)},t}(),ye={canvas:function(t,e){return new de(t,e)},svg:function(t,e){return new ve(t,e)},generator:function(t){return new pe(t)},newSeed:function(){return pe.newSeed()}},me=ye;function be(t){let n,r,o,a,i,s;n=new yt({props:{multiple:!1,accept:"image/svg+xml"}}),n.$on("drop",t[2]);let p=[t[1]],d={};for(let t=0;t<p.length;t+=1)d=e(d,p[t]);return{c(){var t,e;(t=n.$$.fragment)&&t.c(),r=f(),o=h("main"),a=h("div"),e="svg",i=document.createElementNS("http://www.w3.org/2000/svg",e),g(i,d),y(i,"svelte-1jmgdsg",!0),v(a,"margin-top","20px"),v(o,"text-align","center")},m(e,l){j(n,e,l),c(e,r,l),c(e,o,l),u(o,a),u(a,i),t[3](i),s=!0},p(t,[e]){g(i,d=function(t,e){const n={},r={},o={$$scope:1};let a=t.length;for(;a--;){const i=t[a],s=e[a];if(s){for(const t in i)t in s||(r[t]=1);for(const t in s)o[t]||(n[t]=s[t],o[t]=1);t[a]=s}else for(const t in i)o[t]=1}for(const t in r)t in n||(n[t]=void 0);return n}(p,[2&e&&t[1]])),y(i,"svelte-1jmgdsg",!0)},i(t){s||(z(n.$$.fragment,t),s=!0)},o(t){F(n.$$.fragment,t),s=!1},d(e){I(n,e),e&&l(r),e&&l(o),t[3](null)}}}function ke(t,e,n){let r,o={width:0,height:0};return M((()=>{})),[r,o,function(t){const{acceptedFiles:e}=t.detail,a=new FileReader;a.onload=()=>{!function(t){const e=new DOMParser;n(0,r.innerHTML="",r);const a=e.parseFromString(t,"image/svg+xml").documentElement,i=r;n(1,o={width:+a.attributes.width.nodeValue,height:+a.attributes.height.nodeValue,xmlns:a.attributes.xmlns.nodeValue});const s=me.svg(r);function u(t,e){if(!e)return;const n=c(e);if("text"!==e.nodeName)if("rect"!==e.nodeName)if("path"!==e.nodeName)if("line"!==e.nodeName){if("g"===e.nodeName){const n=e.cloneNode(!1);l(t,e,n),t=n}else console.log(e.nodeName);if(e.children.length)for(const n of e.children)u(t,n)}else{e.getAttribute("d");const[r,o,a,i]=h(e,"x1","y1","x2","y2");l(t,e,s.line(r,o,a,i,n))}else{const r=e.getAttribute("d");l(t,e,s.path(r,n))}else{const[r,o,a,i]=h(e,"x","y","width","height");l(t,e,s.rectangle(r,o,a,i,n))}else{const n=e.cloneNode(!0);l(t,e,n)}}function c(t){let{fill:e,stroke:n,strokeWidth:r,opacity:o}=t.style||{};const a=e&&"none"!==e,i=n&&"none"!==n;return""===o&&(o=1),a&&console.log({opacity:o}),{fill:e&&"none"!==e?e:"none",stroke:i?n:"none",...a?{fillWeight:o<.5?.5:o<.8?1.4:2,hachureAngle:[-41,49][Math.round(Math.random())],fillStyle:o<.4?"hachure":"zigzag"}:{},...i?{strokeWidth:+r.replace("px","")||1}:{}}}function l(t,e,n){n.setAttribute("transform",e.getAttribute("transform")||""),t.appendChild(n)}function h(t,...e){return e.map((e=>+t.getAttribute(e)))}u(i,a)}(a.result)},a.readAsText(e[0])},function(t){P[t?"unshift":"push"]((()=>{r=t,n(0,r)}))}]}return new class extends G{constructor(t){super(),R(this,t,ke,be,i,{})}}({target:document.body,props:{name:"world"}})}();
+    ***************************************************************************** */
+
+    function __awaiter(thisArg, _arguments, P, generator) {
+        function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+        return new (P || (P = Promise))(function (resolve, reject) {
+            function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+            function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+            function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+            step((generator = generator.apply(thisArg, _arguments || [])).next());
+        });
+    }
+
+    function __generator(thisArg, body) {
+        var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+        return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+        function verb(n) { return function (v) { return step([n, v]); }; }
+        function step(op) {
+            if (f) throw new TypeError("Generator is already executing.");
+            while (_) try {
+                if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+                if (y = 0, t) op = [op[0] & 2, t.value];
+                switch (op[0]) {
+                    case 0: case 1: t = op; break;
+                    case 4: _.label++; return { value: op[1], done: false };
+                    case 5: _.label++; y = op[1]; op = [0]; continue;
+                    case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                    default:
+                        if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                        if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                        if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                        if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                        if (t[2]) _.ops.pop();
+                        _.trys.pop(); continue;
+                }
+                op = body.call(thisArg, _);
+            } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+            if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+        }
+    }
+
+    function __read(o, n) {
+        var m = typeof Symbol === "function" && o[Symbol.iterator];
+        if (!m) return o;
+        var i = m.call(o), r, ar = [], e;
+        try {
+            while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+        }
+        catch (error) { e = { error: error }; }
+        finally {
+            try {
+                if (r && !r.done && (m = i["return"])) m.call(i);
+            }
+            finally { if (e) throw e.error; }
+        }
+        return ar;
+    }
+
+    /** @deprecated */
+    function __spread() {
+        for (var ar = [], i = 0; i < arguments.length; i++)
+            ar = ar.concat(__read(arguments[i]));
+        return ar;
+    }
+
+    var COMMON_MIME_TYPES = new Map([
+        ['avi', 'video/avi'],
+        ['gif', 'image/gif'],
+        ['ico', 'image/x-icon'],
+        ['jpeg', 'image/jpeg'],
+        ['jpg', 'image/jpeg'],
+        ['mkv', 'video/x-matroska'],
+        ['mov', 'video/quicktime'],
+        ['mp4', 'video/mp4'],
+        ['pdf', 'application/pdf'],
+        ['png', 'image/png'],
+        ['zip', 'application/zip'],
+        ['doc', 'application/msword'],
+        ['docx', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
+    ]);
+    function toFileWithPath(file, path) {
+        var f = withMimeType(file);
+        if (typeof f.path !== 'string') { // on electron, path is already set to the absolute path
+            var webkitRelativePath = file.webkitRelativePath;
+            Object.defineProperty(f, 'path', {
+                value: typeof path === 'string'
+                    ? path
+                    // If <input webkitdirectory> is set,
+                    // the File will have a {webkitRelativePath} property
+                    // https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/webkitdirectory
+                    : typeof webkitRelativePath === 'string' && webkitRelativePath.length > 0
+                        ? webkitRelativePath
+                        : file.name,
+                writable: false,
+                configurable: false,
+                enumerable: true
+            });
+        }
+        return f;
+    }
+    function withMimeType(file) {
+        var name = file.name;
+        var hasExtension = name && name.lastIndexOf('.') !== -1;
+        if (hasExtension && !file.type) {
+            var ext = name.split('.')
+                .pop().toLowerCase();
+            var type = COMMON_MIME_TYPES.get(ext);
+            if (type) {
+                Object.defineProperty(file, 'type', {
+                    value: type,
+                    writable: false,
+                    configurable: false,
+                    enumerable: true
+                });
+            }
+        }
+        return file;
+    }
+
+    var FILES_TO_IGNORE = [
+        // Thumbnail cache files for macOS and Windows
+        '.DS_Store',
+        'Thumbs.db' // Windows
+    ];
+    /**
+     * Convert a DragEvent's DataTrasfer object to a list of File objects
+     * NOTE: If some of the items are folders,
+     * everything will be flattened and placed in the same list but the paths will be kept as a {path} property.
+     * @param evt
+     */
+    function fromEvent(evt) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, isDragEvt(evt) && evt.dataTransfer
+                        ? getDataTransferFiles(evt.dataTransfer, evt.type)
+                        : getInputFiles(evt)];
+            });
+        });
+    }
+    function isDragEvt(value) {
+        return !!value.dataTransfer;
+    }
+    function getInputFiles(evt) {
+        var files = isInput(evt.target)
+            ? evt.target.files
+                ? fromList(evt.target.files)
+                : []
+            : [];
+        return files.map(function (file) { return toFileWithPath(file); });
+    }
+    function isInput(value) {
+        return value !== null;
+    }
+    function getDataTransferFiles(dt, type) {
+        return __awaiter(this, void 0, void 0, function () {
+            var items, files;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!dt.items) return [3 /*break*/, 2];
+                        items = fromList(dt.items)
+                            .filter(function (item) { return item.kind === 'file'; });
+                        // According to https://html.spec.whatwg.org/multipage/dnd.html#dndevents,
+                        // only 'dragstart' and 'drop' has access to the data (source node)
+                        if (type !== 'drop') {
+                            return [2 /*return*/, items];
+                        }
+                        return [4 /*yield*/, Promise.all(items.map(toFilePromises))];
+                    case 1:
+                        files = _a.sent();
+                        return [2 /*return*/, noIgnoredFiles(flatten(files))];
+                    case 2: return [2 /*return*/, noIgnoredFiles(fromList(dt.files)
+                            .map(function (file) { return toFileWithPath(file); }))];
+                }
+            });
+        });
+    }
+    function noIgnoredFiles(files) {
+        return files.filter(function (file) { return FILES_TO_IGNORE.indexOf(file.name) === -1; });
+    }
+    // IE11 does not support Array.from()
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/from#Browser_compatibility
+    // https://developer.mozilla.org/en-US/docs/Web/API/FileList
+    // https://developer.mozilla.org/en-US/docs/Web/API/DataTransferItemList
+    function fromList(items) {
+        var files = [];
+        // tslint:disable: prefer-for-of
+        for (var i = 0; i < items.length; i++) {
+            var file = items[i];
+            files.push(file);
+        }
+        return files;
+    }
+    // https://developer.mozilla.org/en-US/docs/Web/API/DataTransferItem
+    function toFilePromises(item) {
+        if (typeof item.webkitGetAsEntry !== 'function') {
+            return fromDataTransferItem(item);
+        }
+        var entry = item.webkitGetAsEntry();
+        // Safari supports dropping an image node from a different window and can be retrieved using
+        // the DataTransferItem.getAsFile() API
+        // NOTE: FileSystemEntry.file() throws if trying to get the file
+        if (entry && entry.isDirectory) {
+            return fromDirEntry(entry);
+        }
+        return fromDataTransferItem(item);
+    }
+    function flatten(items) {
+        return items.reduce(function (acc, files) { return __spread(acc, (Array.isArray(files) ? flatten(files) : [files])); }, []);
+    }
+    function fromDataTransferItem(item) {
+        var file = item.getAsFile();
+        if (!file) {
+            return Promise.reject(item + " is not a File");
+        }
+        var fwp = toFileWithPath(file);
+        return Promise.resolve(fwp);
+    }
+    // https://developer.mozilla.org/en-US/docs/Web/API/FileSystemEntry
+    function fromEntry(entry) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, entry.isDirectory ? fromDirEntry(entry) : fromFileEntry(entry)];
+            });
+        });
+    }
+    // https://developer.mozilla.org/en-US/docs/Web/API/FileSystemDirectoryEntry
+    function fromDirEntry(entry) {
+        var reader = entry.createReader();
+        return new Promise(function (resolve, reject) {
+            var entries = [];
+            function readEntries() {
+                var _this = this;
+                // https://developer.mozilla.org/en-US/docs/Web/API/FileSystemDirectoryEntry/createReader
+                // https://developer.mozilla.org/en-US/docs/Web/API/FileSystemDirectoryReader/readEntries
+                reader.readEntries(function (batch) { return __awaiter(_this, void 0, void 0, function () {
+                    var files, err_1, items;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                if (!!batch.length) return [3 /*break*/, 5];
+                                _a.label = 1;
+                            case 1:
+                                _a.trys.push([1, 3, , 4]);
+                                return [4 /*yield*/, Promise.all(entries)];
+                            case 2:
+                                files = _a.sent();
+                                resolve(files);
+                                return [3 /*break*/, 4];
+                            case 3:
+                                err_1 = _a.sent();
+                                reject(err_1);
+                                return [3 /*break*/, 4];
+                            case 4: return [3 /*break*/, 6];
+                            case 5:
+                                items = Promise.all(batch.map(fromEntry));
+                                entries.push(items);
+                                // Continue reading
+                                readEntries();
+                                _a.label = 6;
+                            case 6: return [2 /*return*/];
+                        }
+                    });
+                }); }, function (err) {
+                    reject(err);
+                });
+            }
+            readEntries();
+        });
+    }
+    // https://developer.mozilla.org/en-US/docs/Web/API/FileSystemFileEntry
+    function fromFileEntry(entry) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, new Promise(function (resolve, reject) {
+                        entry.file(function (file) {
+                            var fwp = toFileWithPath(file, entry.fullPath);
+                            resolve(fwp);
+                        }, function (err) {
+                            reject(err);
+                        });
+                    })];
+            });
+        });
+    }
+
+    /**
+     * Check if the provided file type should be accepted by the input with accept attribute.
+     * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Input#attr-accept
+     *
+     * Inspired by https://github.com/enyo/dropzone
+     *
+     * @param file {File} https://developer.mozilla.org/en-US/docs/Web/API/File
+     * @param acceptedFiles {string}
+     * @returns {boolean}
+     */
+
+    function accepts(file, acceptedFiles) {
+      if (file && acceptedFiles) {
+        const acceptedFilesArray = Array.isArray(acceptedFiles)
+          ? acceptedFiles
+          : acceptedFiles.split(",");
+        const fileName = file.name || "";
+        const mimeType = (file.type || "").toLowerCase();
+        const baseMimeType = mimeType.replace(/\/.*$/, "");
+
+        return acceptedFilesArray.some((type) => {
+          const validType = type.trim().toLowerCase();
+          if (validType.charAt(0) === ".") {
+            return fileName.toLowerCase().endsWith(validType);
+          } else if (validType.endsWith("/*")) {
+            // This is something like a image/* mime type
+            return baseMimeType === validType.replace(/\/.*$/, "");
+          }
+          return mimeType === validType;
+        });
+      }
+      return true;
+    }
+
+    // Error codes
+    const FILE_INVALID_TYPE = "file-invalid-type";
+    const FILE_TOO_LARGE = "file-too-large";
+    const FILE_TOO_SMALL = "file-too-small";
+    const TOO_MANY_FILES = "too-many-files";
+
+    // File Errors
+    const getInvalidTypeRejectionErr = (accept) => {
+      accept = Array.isArray(accept) && accept.length === 1 ? accept[0] : accept;
+      const messageSuffix = Array.isArray(accept)
+        ? `one of ${accept.join(", ")}`
+        : accept;
+      return {
+        code: FILE_INVALID_TYPE,
+        message: `File type must be ${messageSuffix}`,
+      };
+    };
+
+    const getTooLargeRejectionErr = (maxSize) => {
+      return {
+        code: FILE_TOO_LARGE,
+        message: `File is larger than ${maxSize} bytes`,
+      };
+    };
+
+    const getTooSmallRejectionErr = (minSize) => {
+      return {
+        code: FILE_TOO_SMALL,
+        message: `File is smaller than ${minSize} bytes`,
+      };
+    };
+
+    const TOO_MANY_FILES_REJECTION = {
+      code: TOO_MANY_FILES,
+      message: "Too many files",
+    };
+
+    // Firefox versions prior to 53 return a bogus MIME type for every file drag, so dragovers with
+    // that MIME type will always be accepted
+    function fileAccepted(file, accept) {
+      const isAcceptable =
+        file.type === "application/x-moz-file" || accepts(file, accept);
+      return [
+        isAcceptable,
+        isAcceptable ? null : getInvalidTypeRejectionErr(accept),
+      ];
+    }
+
+    function fileMatchSize(file, minSize, maxSize) {
+      if (isDefined(file.size)) {
+        if (isDefined(minSize) && isDefined(maxSize)) {
+          if (file.size > maxSize) return [false, getTooLargeRejectionErr(maxSize)];
+          if (file.size < minSize) return [false, getTooSmallRejectionErr(minSize)];
+        } else if (isDefined(minSize) && file.size < minSize)
+          return [false, getTooSmallRejectionErr(minSize)];
+        else if (isDefined(maxSize) && file.size > maxSize)
+          return [false, getTooLargeRejectionErr(maxSize)];
+      }
+      return [true, null];
+    }
+
+    function isDefined(value) {
+      return value !== undefined && value !== null;
+    }
+
+    function allFilesAccepted({
+      files,
+      accept,
+      minSize,
+      maxSize,
+      multiple,
+    }) {
+      if (!multiple && files.length > 1) {
+        return false;
+      }
+
+      return files.every((file) => {
+        const [accepted] = fileAccepted(file, accept);
+        const [sizeMatch] = fileMatchSize(file, minSize, maxSize);
+        return accepted && sizeMatch;
+      });
+    }
+
+    // React's synthetic events has event.isPropagationStopped,
+    // but to remain compatibility with other libs (Preact) fall back
+    // to check event.cancelBubble
+    function isPropagationStopped(event) {
+      if (typeof event.isPropagationStopped === "function") {
+        return event.isPropagationStopped();
+      } else if (typeof event.cancelBubble !== "undefined") {
+        return event.cancelBubble;
+      }
+      return false;
+    }
+
+    function isEvtWithFiles(event) {
+      if (!event.dataTransfer) {
+        return !!event.target && !!event.target.files;
+      }
+      // https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/types
+      // https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/Recommended_drag_types#file
+      return Array.prototype.some.call(
+        event.dataTransfer.types,
+        (type) => type === "Files" || type === "application/x-moz-file"
+      );
+    }
+
+    // allow the entire document to be a drag target
+    function onDocumentDragOver(event) {
+      event.preventDefault();
+    }
+
+    function isIe(userAgent) {
+      return (
+        userAgent.indexOf("MSIE") !== -1 || userAgent.indexOf("Trident/") !== -1
+      );
+    }
+
+    function isEdge(userAgent) {
+      return userAgent.indexOf("Edge/") !== -1;
+    }
+
+    function isIeOrEdge(userAgent = window.navigator.userAgent) {
+      return isIe(userAgent) || isEdge(userAgent);
+    }
+
+    /**
+     * This is intended to be used to compose event handlers
+     * They are executed in order until one of them calls `event.isPropagationStopped()`.
+     * Note that the check is done on the first invoke too,
+     * meaning that if propagation was stopped before invoking the fns,
+     * no handlers will be executed.
+     *
+     * @param {Function} fns the event hanlder functions
+     * @return {Function} the event handler to add to an element
+     */
+    function composeEventHandlers(...fns) {
+      return (event, ...args) =>
+        fns.some((fn) => {
+          if (!isPropagationStopped(event) && fn) {
+            fn(event, ...args);
+          }
+          return isPropagationStopped(event);
+        });
+    }
+
+    /* node_modules/svelte-file-dropzone/src/components/Dropzone.svelte generated by Svelte v3.44.3 */
+    const file$4 = "node_modules/svelte-file-dropzone/src/components/Dropzone.svelte";
+
+    // (350:8)       
+    function fallback_block(ctx) {
+    	let p;
+
+    	const block = {
+    		c: function create() {
+    			p = element("p");
+    			p.textContent = "Drag 'n' drop some files here, or click to select files";
+    			add_location(p, file$4, 350, 4, 9206);
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, p, anchor);
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(p);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: fallback_block.name,
+    		type: "fallback",
+    		source: "(350:8)       ",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$4(ctx) {
+    	let div;
+    	let input;
+    	let t;
+    	let div_class_value;
+    	let current;
+    	let mounted;
+    	let dispose;
+    	const default_slot_template = /*#slots*/ ctx[28].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[27], null);
+    	const default_slot_or_fallback = default_slot || fallback_block(ctx);
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			input = element("input");
+    			t = space();
+    			if (default_slot_or_fallback) default_slot_or_fallback.c();
+    			attr_dev(input, "accept", /*accept*/ ctx[0]);
+    			input.multiple = /*multiple*/ ctx[1];
+    			attr_dev(input, "type", "file");
+    			attr_dev(input, "autocomplete", "off");
+    			attr_dev(input, "tabindex", "-1");
+    			set_style(input, "display", "none");
+    			add_location(input, file$4, 339, 2, 8975);
+    			attr_dev(div, "tabindex", "0");
+    			attr_dev(div, "class", div_class_value = "" + ((/*disableDefaultStyles*/ ctx[4] ? '' : 'dropzone') + " " + /*containerClasses*/ ctx[2] + " svelte-817dg2"));
+    			attr_dev(div, "style", /*containerStyles*/ ctx[3]);
+    			add_location(div, file$4, 325, 0, 8444);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			append_dev(div, input);
+    			/*input_binding*/ ctx[29](input);
+    			append_dev(div, t);
+
+    			if (default_slot_or_fallback) {
+    				default_slot_or_fallback.m(div, null);
+    			}
+
+    			/*div_binding*/ ctx[30](div);
+    			current = true;
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(input, "change", /*onDropCb*/ ctx[14], false, false, false),
+    					listen_dev(input, "click", onInputElementClick, false, false, false),
+    					listen_dev(div, "keydown", /*composeKeyboardHandler*/ ctx[16](/*onKeyDownCb*/ ctx[7]), false, false, false),
+    					listen_dev(div, "focus", /*composeKeyboardHandler*/ ctx[16](/*onFocusCb*/ ctx[8]), false, false, false),
+    					listen_dev(div, "blur", /*composeKeyboardHandler*/ ctx[16](/*onBlurCb*/ ctx[9]), false, false, false),
+    					listen_dev(div, "click", /*composeHandler*/ ctx[15](/*onClickCb*/ ctx[10]), false, false, false),
+    					listen_dev(div, "dragenter", /*composeDragHandler*/ ctx[17](/*onDragEnterCb*/ ctx[11]), false, false, false),
+    					listen_dev(div, "dragover", /*composeDragHandler*/ ctx[17](/*onDragOverCb*/ ctx[12]), false, false, false),
+    					listen_dev(div, "dragleave", /*composeDragHandler*/ ctx[17](/*onDragLeaveCb*/ ctx[13]), false, false, false),
+    					listen_dev(div, "drop", /*composeDragHandler*/ ctx[17](/*onDropCb*/ ctx[14]), false, false, false)
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, dirty) {
+    			if (!current || dirty[0] & /*accept*/ 1) {
+    				attr_dev(input, "accept", /*accept*/ ctx[0]);
+    			}
+
+    			if (!current || dirty[0] & /*multiple*/ 2) {
+    				prop_dev(input, "multiple", /*multiple*/ ctx[1]);
+    			}
+
+    			if (default_slot) {
+    				if (default_slot.p && (!current || dirty[0] & /*$$scope*/ 134217728)) {
+    					update_slot_base(
+    						default_slot,
+    						default_slot_template,
+    						ctx,
+    						/*$$scope*/ ctx[27],
+    						!current
+    						? get_all_dirty_from_scope(/*$$scope*/ ctx[27])
+    						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[27], dirty, null),
+    						null
+    					);
+    				}
+    			}
+
+    			if (!current || dirty[0] & /*disableDefaultStyles, containerClasses*/ 20 && div_class_value !== (div_class_value = "" + ((/*disableDefaultStyles*/ ctx[4] ? '' : 'dropzone') + " " + /*containerClasses*/ ctx[2] + " svelte-817dg2"))) {
+    				attr_dev(div, "class", div_class_value);
+    			}
+
+    			if (!current || dirty[0] & /*containerStyles*/ 8) {
+    				attr_dev(div, "style", /*containerStyles*/ ctx[3]);
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(default_slot_or_fallback, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(default_slot_or_fallback, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			/*input_binding*/ ctx[29](null);
+    			if (default_slot_or_fallback) default_slot_or_fallback.d(detaching);
+    			/*div_binding*/ ctx[30](null);
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$4.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function onInputElementClick(event) {
+    	event.stopPropagation();
+    }
+
+    function instance$4($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('Dropzone', slots, ['default']);
+    	let { accept } = $$props;
+    	let { disabled = false } = $$props;
+    	let { getFilesFromEvent = fromEvent } = $$props;
+    	let { maxSize = Infinity } = $$props;
+    	let { minSize = 0 } = $$props;
+    	let { multiple = true } = $$props;
+    	let { preventDropOnDocument = true } = $$props;
+    	let { noClick = false } = $$props;
+    	let { noKeyboard = false } = $$props;
+    	let { noDrag = false } = $$props;
+    	let { noDragEventsBubbling = false } = $$props;
+    	let { containerClasses = "" } = $$props;
+    	let { containerStyles = "" } = $$props;
+    	let { disableDefaultStyles = false } = $$props;
+    	const dispatch = createEventDispatcher();
+
+    	//state
+    	let state = {
+    		isFocused: false,
+    		isFileDialogActive: false,
+    		isDragActive: false,
+    		isDragAccept: false,
+    		isDragReject: false,
+    		draggedFiles: [],
+    		acceptedFiles: [],
+    		fileRejections: []
+    	};
+
+    	let rootRef;
+    	let inputRef;
+
+    	function resetState() {
+    		state.isFileDialogActive = false;
+    		state.isDragActive = false;
+    		state.draggedFiles = [];
+    		state.acceptedFiles = [];
+    		state.fileRejections = [];
+    	}
+
+    	// Fn for opening the file dialog programmatically
+    	function openFileDialog() {
+    		if (inputRef) {
+    			$$invalidate(6, inputRef.value = null, inputRef); // TODO check if null needs to be set
+    			state.isFileDialogActive = true;
+    			inputRef.click();
+    		}
+    	}
+
+    	// Cb to open the file dialog when SPACE/ENTER occurs on the dropzone
+    	function onKeyDownCb(event) {
+    		// Ignore keyboard events bubbling up the DOM tree
+    		if (!rootRef || !rootRef.isEqualNode(event.target)) {
+    			return;
+    		}
+
+    		if (event.keyCode === 32 || event.keyCode === 13) {
+    			event.preventDefault();
+    			openFileDialog();
+    		}
+    	}
+
+    	// Update focus state for the dropzone
+    	function onFocusCb() {
+    		state.isFocused = true;
+    	}
+
+    	function onBlurCb() {
+    		state.isFocused = false;
+    	}
+
+    	// Cb to open the file dialog when click occurs on the dropzone
+    	function onClickCb() {
+    		if (noClick) {
+    			return;
+    		}
+
+    		// In IE11/Edge the file-browser dialog is blocking, therefore, use setTimeout()
+    		// to ensure React can handle state changes
+    		// See: https://github.com/react-dropzone/react-dropzone/issues/450
+    		if (isIeOrEdge()) {
+    			setTimeout(openFileDialog, 0);
+    		} else {
+    			openFileDialog();
+    		}
+    	}
+
+    	function onDragEnterCb(event) {
+    		event.preventDefault();
+    		stopPropagation(event);
+    		dragTargetsRef = [...dragTargetsRef, event.target];
+
+    		if (isEvtWithFiles(event)) {
+    			Promise.resolve(getFilesFromEvent(event)).then(draggedFiles => {
+    				if (isPropagationStopped(event) && !noDragEventsBubbling) {
+    					return;
+    				}
+
+    				state.draggedFiles = draggedFiles;
+    				state.isDragActive = true;
+    				dispatch("dragenter", { dragEvent: event });
+    			});
+    		}
+    	}
+
+    	function onDragOverCb(event) {
+    		event.preventDefault();
+    		stopPropagation(event);
+
+    		if (event.dataTransfer) {
+    			try {
+    				event.dataTransfer.dropEffect = "copy";
+    			} catch {
+    				
+    			} /* eslint-disable-line no-empty */
+    		}
+
+    		if (isEvtWithFiles(event)) {
+    			dispatch("dragover", { dragEvent: event });
+    		}
+
+    		return false;
+    	}
+
+    	function onDragLeaveCb(event) {
+    		event.preventDefault();
+    		stopPropagation(event);
+
+    		// Only deactivate once the dropzone and all children have been left
+    		const targets = dragTargetsRef.filter(target => rootRef && rootRef.contains(target));
+
+    		// Make sure to remove a target present multiple times only once
+    		// (Firefox may fire dragenter/dragleave multiple times on the same element)
+    		const targetIdx = targets.indexOf(event.target);
+
+    		if (targetIdx !== -1) {
+    			targets.splice(targetIdx, 1);
+    		}
+
+    		dragTargetsRef = targets;
+
+    		if (targets.length > 0) {
+    			return;
+    		}
+
+    		state.isDragActive = false;
+    		state.draggedFiles = [];
+
+    		if (isEvtWithFiles(event)) {
+    			dispatch("dragleave", { dragEvent: event });
+    		}
+    	}
+
+    	function onDropCb(event) {
+    		event.preventDefault();
+    		stopPropagation(event);
+    		dragTargetsRef = [];
+
+    		if (isEvtWithFiles(event)) {
+    			Promise.resolve(getFilesFromEvent(event)).then(files => {
+    				if (isPropagationStopped(event) && !noDragEventsBubbling) {
+    					return;
+    				}
+
+    				const acceptedFiles = [];
+    				const fileRejections = [];
+
+    				files.forEach(file => {
+    					const [accepted, acceptError] = fileAccepted(file, accept);
+    					const [sizeMatch, sizeError] = fileMatchSize(file, minSize, maxSize);
+
+    					if (accepted && sizeMatch) {
+    						acceptedFiles.push(file);
+    					} else {
+    						const errors = [acceptError, sizeError].filter(e => e);
+    						fileRejections.push({ file, errors });
+    					}
+    				});
+
+    				if (!multiple && acceptedFiles.length > 1) {
+    					// Reject everything and empty accepted files
+    					acceptedFiles.forEach(file => {
+    						fileRejections.push({ file, errors: [TOO_MANY_FILES_REJECTION] });
+    					});
+
+    					acceptedFiles.splice(0);
+    				}
+
+    				state.acceptedFiles = acceptedFiles;
+    				state.fileRejections = fileRejections;
+    				dispatch("drop", { acceptedFiles, fileRejections, event });
+
+    				if (fileRejections.length > 0) {
+    					dispatch("droprejected", { fileRejections, event });
+    				}
+
+    				if (acceptedFiles.length > 0) {
+    					dispatch("dropaccepted", { acceptedFiles, event });
+    				}
+    			});
+    		}
+
+    		resetState();
+    	}
+
+    	function composeHandler(fn) {
+    		return disabled ? null : fn;
+    	}
+
+    	function composeKeyboardHandler(fn) {
+    		return noKeyboard ? null : composeHandler(fn);
+    	}
+
+    	function composeDragHandler(fn) {
+    		return noDrag ? null : composeHandler(fn);
+    	}
+
+    	function stopPropagation(event) {
+    		if (noDragEventsBubbling) {
+    			event.stopPropagation();
+    		}
+    	}
+
+    	let dragTargetsRef = [];
+
+    	function onDocumentDrop(event) {
+    		if (rootRef && rootRef.contains(event.target)) {
+    			// If we intercepted an event for our instance, let it propagate down to the instance's onDrop handler
+    			return;
+    		}
+
+    		event.preventDefault();
+    		dragTargetsRef = [];
+    	}
+
+    	// Update file dialog active state when the window is focused on
+    	function onWindowFocus() {
+    		// Execute the timeout only if the file dialog is opened in the browser
+    		if (state.isFileDialogActive) {
+    			setTimeout(
+    				() => {
+    					if (inputRef) {
+    						const { files } = inputRef;
+
+    						if (!files.length) {
+    							state.isFileDialogActive = false;
+    							dispatch("filedialogcancel");
+    						}
+    					}
+    				},
+    				300
+    			);
+    		}
+    	}
+
+    	onMount(() => {
+    		window.addEventListener("focus", onWindowFocus, false);
+
+    		if (preventDropOnDocument) {
+    			document.addEventListener("dragover", onDocumentDragOver, false);
+    			document.addEventListener("drop", onDocumentDrop, false);
+    		}
+    	});
+
+    	onDestroy(() => {
+    		window.removeEventListener("focus", onWindowFocus, false);
+
+    		if (preventDropOnDocument) {
+    			document.removeEventListener("dragover", onDocumentDragOver);
+    			document.removeEventListener("drop", onDocumentDrop);
+    		}
+    	});
+
+    	const writable_props = [
+    		'accept',
+    		'disabled',
+    		'getFilesFromEvent',
+    		'maxSize',
+    		'minSize',
+    		'multiple',
+    		'preventDropOnDocument',
+    		'noClick',
+    		'noKeyboard',
+    		'noDrag',
+    		'noDragEventsBubbling',
+    		'containerClasses',
+    		'containerStyles',
+    		'disableDefaultStyles'
+    	];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Dropzone> was created with unknown prop '${key}'`);
+    	});
+
+    	function input_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			inputRef = $$value;
+    			$$invalidate(6, inputRef);
+    		});
+    	}
+
+    	function div_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			rootRef = $$value;
+    			$$invalidate(5, rootRef);
+    		});
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ('accept' in $$props) $$invalidate(0, accept = $$props.accept);
+    		if ('disabled' in $$props) $$invalidate(18, disabled = $$props.disabled);
+    		if ('getFilesFromEvent' in $$props) $$invalidate(19, getFilesFromEvent = $$props.getFilesFromEvent);
+    		if ('maxSize' in $$props) $$invalidate(20, maxSize = $$props.maxSize);
+    		if ('minSize' in $$props) $$invalidate(21, minSize = $$props.minSize);
+    		if ('multiple' in $$props) $$invalidate(1, multiple = $$props.multiple);
+    		if ('preventDropOnDocument' in $$props) $$invalidate(22, preventDropOnDocument = $$props.preventDropOnDocument);
+    		if ('noClick' in $$props) $$invalidate(23, noClick = $$props.noClick);
+    		if ('noKeyboard' in $$props) $$invalidate(24, noKeyboard = $$props.noKeyboard);
+    		if ('noDrag' in $$props) $$invalidate(25, noDrag = $$props.noDrag);
+    		if ('noDragEventsBubbling' in $$props) $$invalidate(26, noDragEventsBubbling = $$props.noDragEventsBubbling);
+    		if ('containerClasses' in $$props) $$invalidate(2, containerClasses = $$props.containerClasses);
+    		if ('containerStyles' in $$props) $$invalidate(3, containerStyles = $$props.containerStyles);
+    		if ('disableDefaultStyles' in $$props) $$invalidate(4, disableDefaultStyles = $$props.disableDefaultStyles);
+    		if ('$$scope' in $$props) $$invalidate(27, $$scope = $$props.$$scope);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		fromEvent,
+    		allFilesAccepted,
+    		composeEventHandlers,
+    		fileAccepted,
+    		fileMatchSize,
+    		isEvtWithFiles,
+    		isIeOrEdge,
+    		isPropagationStopped,
+    		onDocumentDragOver,
+    		TOO_MANY_FILES_REJECTION,
+    		onMount,
+    		onDestroy,
+    		createEventDispatcher,
+    		accept,
+    		disabled,
+    		getFilesFromEvent,
+    		maxSize,
+    		minSize,
+    		multiple,
+    		preventDropOnDocument,
+    		noClick,
+    		noKeyboard,
+    		noDrag,
+    		noDragEventsBubbling,
+    		containerClasses,
+    		containerStyles,
+    		disableDefaultStyles,
+    		dispatch,
+    		state,
+    		rootRef,
+    		inputRef,
+    		resetState,
+    		openFileDialog,
+    		onKeyDownCb,
+    		onFocusCb,
+    		onBlurCb,
+    		onClickCb,
+    		onDragEnterCb,
+    		onDragOverCb,
+    		onDragLeaveCb,
+    		onDropCb,
+    		composeHandler,
+    		composeKeyboardHandler,
+    		composeDragHandler,
+    		stopPropagation,
+    		dragTargetsRef,
+    		onDocumentDrop,
+    		onWindowFocus,
+    		onInputElementClick
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('accept' in $$props) $$invalidate(0, accept = $$props.accept);
+    		if ('disabled' in $$props) $$invalidate(18, disabled = $$props.disabled);
+    		if ('getFilesFromEvent' in $$props) $$invalidate(19, getFilesFromEvent = $$props.getFilesFromEvent);
+    		if ('maxSize' in $$props) $$invalidate(20, maxSize = $$props.maxSize);
+    		if ('minSize' in $$props) $$invalidate(21, minSize = $$props.minSize);
+    		if ('multiple' in $$props) $$invalidate(1, multiple = $$props.multiple);
+    		if ('preventDropOnDocument' in $$props) $$invalidate(22, preventDropOnDocument = $$props.preventDropOnDocument);
+    		if ('noClick' in $$props) $$invalidate(23, noClick = $$props.noClick);
+    		if ('noKeyboard' in $$props) $$invalidate(24, noKeyboard = $$props.noKeyboard);
+    		if ('noDrag' in $$props) $$invalidate(25, noDrag = $$props.noDrag);
+    		if ('noDragEventsBubbling' in $$props) $$invalidate(26, noDragEventsBubbling = $$props.noDragEventsBubbling);
+    		if ('containerClasses' in $$props) $$invalidate(2, containerClasses = $$props.containerClasses);
+    		if ('containerStyles' in $$props) $$invalidate(3, containerStyles = $$props.containerStyles);
+    		if ('disableDefaultStyles' in $$props) $$invalidate(4, disableDefaultStyles = $$props.disableDefaultStyles);
+    		if ('state' in $$props) state = $$props.state;
+    		if ('rootRef' in $$props) $$invalidate(5, rootRef = $$props.rootRef);
+    		if ('inputRef' in $$props) $$invalidate(6, inputRef = $$props.inputRef);
+    		if ('dragTargetsRef' in $$props) dragTargetsRef = $$props.dragTargetsRef;
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [
+    		accept,
+    		multiple,
+    		containerClasses,
+    		containerStyles,
+    		disableDefaultStyles,
+    		rootRef,
+    		inputRef,
+    		onKeyDownCb,
+    		onFocusCb,
+    		onBlurCb,
+    		onClickCb,
+    		onDragEnterCb,
+    		onDragOverCb,
+    		onDragLeaveCb,
+    		onDropCb,
+    		composeHandler,
+    		composeKeyboardHandler,
+    		composeDragHandler,
+    		disabled,
+    		getFilesFromEvent,
+    		maxSize,
+    		minSize,
+    		preventDropOnDocument,
+    		noClick,
+    		noKeyboard,
+    		noDrag,
+    		noDragEventsBubbling,
+    		$$scope,
+    		slots,
+    		input_binding,
+    		div_binding
+    	];
+    }
+
+    class Dropzone extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+
+    		init(
+    			this,
+    			options,
+    			instance$4,
+    			create_fragment$4,
+    			safe_not_equal,
+    			{
+    				accept: 0,
+    				disabled: 18,
+    				getFilesFromEvent: 19,
+    				maxSize: 20,
+    				minSize: 21,
+    				multiple: 1,
+    				preventDropOnDocument: 22,
+    				noClick: 23,
+    				noKeyboard: 24,
+    				noDrag: 25,
+    				noDragEventsBubbling: 26,
+    				containerClasses: 2,
+    				containerStyles: 3,
+    				disableDefaultStyles: 4
+    			},
+    			null,
+    			[-1, -1]
+    		);
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Dropzone",
+    			options,
+    			id: create_fragment$4.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*accept*/ ctx[0] === undefined && !('accept' in props)) {
+    			console.warn("<Dropzone> was created without expected prop 'accept'");
+    		}
+    	}
+
+    	get accept() {
+    		throw new Error("<Dropzone>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set accept(value) {
+    		throw new Error("<Dropzone>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get disabled() {
+    		throw new Error("<Dropzone>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set disabled(value) {
+    		throw new Error("<Dropzone>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get getFilesFromEvent() {
+    		throw new Error("<Dropzone>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set getFilesFromEvent(value) {
+    		throw new Error("<Dropzone>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get maxSize() {
+    		throw new Error("<Dropzone>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set maxSize(value) {
+    		throw new Error("<Dropzone>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get minSize() {
+    		throw new Error("<Dropzone>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set minSize(value) {
+    		throw new Error("<Dropzone>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get multiple() {
+    		throw new Error("<Dropzone>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set multiple(value) {
+    		throw new Error("<Dropzone>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get preventDropOnDocument() {
+    		throw new Error("<Dropzone>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set preventDropOnDocument(value) {
+    		throw new Error("<Dropzone>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get noClick() {
+    		throw new Error("<Dropzone>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set noClick(value) {
+    		throw new Error("<Dropzone>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get noKeyboard() {
+    		throw new Error("<Dropzone>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set noKeyboard(value) {
+    		throw new Error("<Dropzone>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get noDrag() {
+    		throw new Error("<Dropzone>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set noDrag(value) {
+    		throw new Error("<Dropzone>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get noDragEventsBubbling() {
+    		throw new Error("<Dropzone>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set noDragEventsBubbling(value) {
+    		throw new Error("<Dropzone>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get containerClasses() {
+    		throw new Error("<Dropzone>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set containerClasses(value) {
+    		throw new Error("<Dropzone>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get containerStyles() {
+    		throw new Error("<Dropzone>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set containerStyles(value) {
+    		throw new Error("<Dropzone>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get disableDefaultStyles() {
+    		throw new Error("<Dropzone>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set disableDefaultStyles(value) {
+    		throw new Error("<Dropzone>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* node_modules/svelte-slider/src/Rail.svelte generated by Svelte v3.44.3 */
+
+    const file$3 = "node_modules/svelte-slider/src/Rail.svelte";
+
+    function create_fragment$3(ctx) {
+    	let div1;
+    	let div0;
+    	let t;
+    	let current;
+    	const default_slot_template = /*#slots*/ ctx[2].default;
+    	const default_slot = create_slot(default_slot_template, ctx, /*$$scope*/ ctx[1], null);
+
+    	const block = {
+    		c: function create() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			t = space();
+    			if (default_slot) default_slot.c();
+    			attr_dev(div0, "class", "selected svelte-1u5xdj2");
+    			set_style(div0, "left", /*value*/ ctx[0][0] * 100 + "%");
+    			set_style(div0, "right", (1 - /*value*/ ctx[0][1]) * 100 + "%");
+    			add_location(div0, file$3, 5, 2, 61);
+    			attr_dev(div1, "class", "rail svelte-1u5xdj2");
+    			add_location(div1, file$3, 4, 0, 40);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div1, anchor);
+    			append_dev(div1, div0);
+    			append_dev(div1, t);
+
+    			if (default_slot) {
+    				default_slot.m(div1, null);
+    			}
+
+    			current = true;
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (!current || dirty & /*value*/ 1) {
+    				set_style(div0, "left", /*value*/ ctx[0][0] * 100 + "%");
+    			}
+
+    			if (!current || dirty & /*value*/ 1) {
+    				set_style(div0, "right", (1 - /*value*/ ctx[0][1]) * 100 + "%");
+    			}
+
+    			if (default_slot) {
+    				if (default_slot.p && (!current || dirty & /*$$scope*/ 2)) {
+    					update_slot_base(
+    						default_slot,
+    						default_slot_template,
+    						ctx,
+    						/*$$scope*/ ctx[1],
+    						!current
+    						? get_all_dirty_from_scope(/*$$scope*/ ctx[1])
+    						: get_slot_changes(default_slot_template, /*$$scope*/ ctx[1], dirty, null),
+    						null
+    					);
+    				}
+    			}
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(default_slot, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(default_slot, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div1);
+    			if (default_slot) default_slot.d(detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$3.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$3($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('Rail', slots, ['default']);
+    	let { value } = $$props;
+    	const writable_props = ['value'];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Rail> was created with unknown prop '${key}'`);
+    	});
+
+    	$$self.$$set = $$props => {
+    		if ('value' in $$props) $$invalidate(0, value = $$props.value);
+    		if ('$$scope' in $$props) $$invalidate(1, $$scope = $$props.$$scope);
+    	};
+
+    	$$self.$capture_state = () => ({ value });
+
+    	$$self.$inject_state = $$props => {
+    		if ('value' in $$props) $$invalidate(0, value = $$props.value);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [value, $$scope, slots];
+    }
+
+    class Rail extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$3, create_fragment$3, safe_not_equal, { value: 0 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Rail",
+    			options,
+    			id: create_fragment$3.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*value*/ ctx[0] === undefined && !('value' in props)) {
+    			console.warn("<Rail> was created without expected prop 'value'");
+    		}
+    	}
+
+    	get value() {
+    		throw new Error("<Rail>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set value(value) {
+    		throw new Error("<Rail>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* node_modules/svelte-slider/src/Thumb.svelte generated by Svelte v3.44.3 */
+    const file$2 = "node_modules/svelte-slider/src/Thumb.svelte";
+
+    function create_fragment$2(ctx) {
+    	let div;
+    	let mounted;
+    	let dispose;
+
+    	const block = {
+    		c: function create() {
+    			div = element("div");
+    			attr_dev(div, "class", "thumb svelte-1p2qw86");
+    			set_style(div, "left", /*position*/ ctx[0] * 100 + "%");
+    			add_location(div, file$2, 38, 0, 984);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div, anchor);
+    			/*div_binding*/ ctx[5](div);
+
+    			if (!mounted) {
+    				dispose = [
+    					listen_dev(div, "start", /*handleStart*/ ctx[2], false, false, false),
+    					listen_dev(div, "move", /*handleMove*/ ctx[3], false, false, false),
+    					listen_dev(div, "end", /*handleEnd*/ ctx[4], false, false, false)
+    				];
+
+    				mounted = true;
+    			}
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (dirty & /*position*/ 1) {
+    				set_style(div, "left", /*position*/ ctx[0] * 100 + "%");
+    			}
+    		},
+    		i: noop,
+    		o: noop,
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div);
+    			/*div_binding*/ ctx[5](null);
+    			mounted = false;
+    			run_all(dispose);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$2.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance$2($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('Thumb', slots, []);
+    	let { position } = $$props;
+    	let thumb;
+    	let bbox;
+    	const dispatch = createEventDispatcher();
+
+    	function handleStart(event) {
+    		event.preventDefault();
+    		const x = event.clientX;
+    		const bbox = event.target.getBoundingClientRect();
+    		thumb.setPointerCapture(event.pointerId);
+    		thumb.addEventListener('pointermove', handleMove);
+    		thumb.addEventListener('pointerup', handleEnd);
+    		dispatch('dragstart', { x, bbox });
+    	}
+
+    	function handleMove(event) {
+    		event.preventDefault();
+    		const x = event.clientX;
+    		const bbox = event.target.getBoundingClientRect();
+    		dispatch('dragging', { x, bbox });
+    	}
+
+    	function handleEnd(event) {
+    		event.preventDefault();
+    		thumb.removeEventListener('pointermove', handleMove);
+    		thumb.removeEventListener('pointerup', handleEnd);
+    		dispatch('dragend');
+    	}
+
+    	onMount(() => {
+    		thumb.addEventListener('pointerdown', handleStart);
+    	});
+
+    	const writable_props = ['position'];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console.warn(`<Thumb> was created with unknown prop '${key}'`);
+    	});
+
+    	function div_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			thumb = $$value;
+    			$$invalidate(1, thumb);
+    		});
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ('position' in $$props) $$invalidate(0, position = $$props.position);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		onMount,
+    		createEventDispatcher,
+    		position,
+    		thumb,
+    		bbox,
+    		dispatch,
+    		handleStart,
+    		handleMove,
+    		handleEnd
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('position' in $$props) $$invalidate(0, position = $$props.position);
+    		if ('thumb' in $$props) $$invalidate(1, thumb = $$props.thumb);
+    		if ('bbox' in $$props) bbox = $$props.bbox;
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [position, thumb, handleStart, handleMove, handleEnd, div_binding];
+    }
+
+    class Thumb extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$2, create_fragment$2, safe_not_equal, { position: 0 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Thumb",
+    			options,
+    			id: create_fragment$2.name
+    		});
+
+    		const { ctx } = this.$$;
+    		const props = options.props || {};
+
+    		if (/*position*/ ctx[0] === undefined && !('position' in props)) {
+    			console.warn("<Thumb> was created without expected prop 'position'");
+    		}
+    	}
+
+    	get position() {
+    		throw new Error("<Thumb>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set position(value) {
+    		throw new Error("<Thumb>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    /* node_modules/svelte-slider/src/Slider.svelte generated by Svelte v3.44.3 */
+
+    const { console: console_1$1 } = globals;
+    const file$1 = "node_modules/svelte-slider/src/Slider.svelte";
+
+    // (61:6) {#if !single}
+    function create_if_block(ctx) {
+    	let thumb;
+    	let current;
+
+    	thumb = new Thumb({
+    			props: { position: /*value*/ ctx[0][0] },
+    			$$inline: true
+    		});
+
+    	thumb.$on("dragstart", /*getStartListener*/ ctx[3](0));
+    	thumb.$on("dragging", /*moveListener*/ ctx[4]);
+    	thumb.$on("dragend", endListener);
+
+    	const block = {
+    		c: function create() {
+    			create_component(thumb.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			mount_component(thumb, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			const thumb_changes = {};
+    			if (dirty & /*value*/ 1) thumb_changes.position = /*value*/ ctx[0][0];
+    			thumb.$set(thumb_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(thumb.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(thumb.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			destroy_component(thumb, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_if_block.name,
+    		type: "if",
+    		source: "(61:6) {#if !single}",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    // (60:4) <Rail {value} on:set={onSet}>
+    function create_default_slot(ctx) {
+    	let t;
+    	let thumb;
+    	let current;
+    	let if_block = !/*single*/ ctx[1] && create_if_block(ctx);
+
+    	thumb = new Thumb({
+    			props: { position: /*value*/ ctx[0][1] },
+    			$$inline: true
+    		});
+
+    	thumb.$on("dragstart", /*getStartListener*/ ctx[3](1));
+    	thumb.$on("dragging", /*moveListener*/ ctx[4]);
+    	thumb.$on("dragend", endListener);
+
+    	const block = {
+    		c: function create() {
+    			if (if_block) if_block.c();
+    			t = space();
+    			create_component(thumb.$$.fragment);
+    		},
+    		m: function mount(target, anchor) {
+    			if (if_block) if_block.m(target, anchor);
+    			insert_dev(target, t, anchor);
+    			mount_component(thumb, target, anchor);
+    			current = true;
+    		},
+    		p: function update(ctx, dirty) {
+    			if (!/*single*/ ctx[1]) {
+    				if (if_block) {
+    					if_block.p(ctx, dirty);
+
+    					if (dirty & /*single*/ 2) {
+    						transition_in(if_block, 1);
+    					}
+    				} else {
+    					if_block = create_if_block(ctx);
+    					if_block.c();
+    					transition_in(if_block, 1);
+    					if_block.m(t.parentNode, t);
+    				}
+    			} else if (if_block) {
+    				group_outros();
+
+    				transition_out(if_block, 1, 1, () => {
+    					if_block = null;
+    				});
+
+    				check_outros();
+    			}
+
+    			const thumb_changes = {};
+    			if (dirty & /*value*/ 1) thumb_changes.position = /*value*/ ctx[0][1];
+    			thumb.$set(thumb_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(if_block);
+    			transition_in(thumb.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(if_block);
+    			transition_out(thumb.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (if_block) if_block.d(detaching);
+    			if (detaching) detach_dev(t);
+    			destroy_component(thumb, detaching);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_default_slot.name,
+    		type: "slot",
+    		source: "(60:4) <Rail {value} on:set={onSet}>",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function create_fragment$1(ctx) {
+    	let div1;
+    	let div0;
+    	let rail;
+    	let current;
+
+    	rail = new Rail({
+    			props: {
+    				value: /*value*/ ctx[0],
+    				$$slots: { default: [create_default_slot] },
+    				$$scope: { ctx }
+    			},
+    			$$inline: true
+    		});
+
+    	rail.$on("set", onSet);
+
+    	const block = {
+    		c: function create() {
+    			div1 = element("div");
+    			div0 = element("div");
+    			create_component(rail.$$.fragment);
+    			add_location(div0, file$1, 58, 2, 1338);
+    			attr_dev(div1, "class", "slider svelte-1cw3o64");
+    			add_location(div1, file$1, 57, 0, 1315);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, div1, anchor);
+    			append_dev(div1, div0);
+    			mount_component(rail, div0, null);
+    			/*div0_binding*/ ctx[5](div0);
+    			current = true;
+    		},
+    		p: function update(ctx, [dirty]) {
+    			const rail_changes = {};
+    			if (dirty & /*value*/ 1) rail_changes.value = /*value*/ ctx[0];
+
+    			if (dirty & /*$$scope, value, single*/ 515) {
+    				rail_changes.$$scope = { dirty, ctx };
+    			}
+
+    			rail.$set(rail_changes);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(rail.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(rail.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(div1);
+    			destroy_component(rail);
+    			/*div0_binding*/ ctx[5](null);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment$1.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function endListener() {
+    	document.body.style.cursor = '';
+    }
+
+    function onSet(event) {
+    	console.log(event.detail);
+    }
+
+    function instance$1($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('Slider', slots, []);
+    	let { value = [0, 1] } = $$props;
+    	let { single = false } = $$props;
+    	let container;
+    	let activeIndex;
+    	let offset;
+    	let dispatch = createEventDispatcher();
+
+    	function getStartListener(index) {
+    		return event => {
+    			activeIndex = index;
+    			const { bbox } = event.detail;
+    			offset = bbox.width / 2 - (event.detail.x - bbox.left);
+    			document.body.style.cursor = 'pointer';
+    		};
+    	}
+
+    	function moveListener(event) {
+    		const bbox = container.getBoundingClientRect();
+    		const { x } = event.detail;
+    		let position = (x - bbox.left + offset) / bbox.width;
+
+    		if (position < 0) {
+    			position = 0;
+    		} else if (position > 1) {
+    			position = 1;
+    		}
+
+    		if (activeIndex === 0 && value[0] > value[1]) {
+    			activeIndex = 1;
+    			$$invalidate(0, value[0] = value[1], value);
+    			return;
+    		} else if (activeIndex === 1 && value[1] < value[0]) {
+    			activeIndex = 0;
+    			$$invalidate(0, value[1] = value[0], value);
+    			return;
+    		}
+
+    		if (value[activeIndex] === position) return;
+    		$$invalidate(0, value[activeIndex] = position, value);
+    		dispatch('change', value);
+    	}
+
+    	const writable_props = ['value', 'single'];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1$1.warn(`<Slider> was created with unknown prop '${key}'`);
+    	});
+
+    	function div0_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			container = $$value;
+    			$$invalidate(2, container);
+    		});
+    	}
+
+    	$$self.$$set = $$props => {
+    		if ('value' in $$props) $$invalidate(0, value = $$props.value);
+    		if ('single' in $$props) $$invalidate(1, single = $$props.single);
+    	};
+
+    	$$self.$capture_state = () => ({
+    		createEventDispatcher,
+    		Rail,
+    		Thumb,
+    		value,
+    		single,
+    		container,
+    		activeIndex,
+    		offset,
+    		dispatch,
+    		getStartListener,
+    		moveListener,
+    		endListener,
+    		onSet
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('value' in $$props) $$invalidate(0, value = $$props.value);
+    		if ('single' in $$props) $$invalidate(1, single = $$props.single);
+    		if ('container' in $$props) $$invalidate(2, container = $$props.container);
+    		if ('activeIndex' in $$props) activeIndex = $$props.activeIndex;
+    		if ('offset' in $$props) offset = $$props.offset;
+    		if ('dispatch' in $$props) dispatch = $$props.dispatch;
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	return [value, single, container, getStartListener, moveListener, div0_binding];
+    }
+
+    class Slider extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance$1, create_fragment$1, safe_not_equal, { value: 0, single: 1 });
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "Slider",
+    			options,
+    			id: create_fragment$1.name
+    		});
+    	}
+
+    	get value() {
+    		throw new Error("<Slider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set value(value) {
+    		throw new Error("<Slider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	get single() {
+    		throw new Error("<Slider>: Props cannot be read directly from the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+
+    	set single(value) {
+    		throw new Error("<Slider>: Props cannot be set directly on the component instance unless compiling with 'accessors: true' or '<svelte:options accessors/>'");
+    	}
+    }
+
+    var t=function(e,r){return (t=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(t,e){t.__proto__=e;}||function(t,e){for(var r in e)Object.prototype.hasOwnProperty.call(e,r)&&(t[r]=e[r]);})(e,r)};function e(e,r){if("function"!=typeof r&&null!==r)throw new TypeError("Class extends value "+String(r)+" is not a constructor or null");function n(){this.constructor=e;}t(e,r),e.prototype=null===r?Object.create(r):(n.prototype=r.prototype,new n);}var r=function(){return (r=Object.assign||function(t){for(var e,r=1,n=arguments.length;r<n;r++)for(var a in e=arguments[r])Object.prototype.hasOwnProperty.call(e,a)&&(t[a]=e[a]);return t}).apply(this,arguments)};function n(t,e,r){if(r||2===arguments.length)for(var n,a=0,s=e.length;a<s;a++)!n&&a in e||(n||(n=Array.prototype.slice.call(e,0,a)),n[a]=e[a]);return t.concat(n||Array.prototype.slice.call(e))}function a(t,e,r){if(t&&t.length){var n=e[0],a=e[1],s=Math.PI/180*r,o=Math.cos(s),i=Math.sin(s);t.forEach((function(t){var e=t[0],r=t[1];t[0]=(e-n)*o-(r-a)*i+n,t[1]=(e-n)*i+(r-a)*o+a;}));}}function s(t){var e=t[0],r=t[1];return Math.sqrt(Math.pow(e[0]-r[0],2)+Math.pow(e[1]-r[1],2))}function o(t,e){var r=e.hachureAngle+90,s=e.hachureGap;s<0&&(s=4*e.strokeWidth),s=Math.max(s,.1);var o=[0,0];if(r)for(var i=0,h=t;i<h.length;i++){a(h[i],o,r);}var u=function(t,e){for(var r=[],a=0,s=t;a<s.length;a++){(p=n([],s[a],!0))[0].join(",")!==p[p.length-1].join(",")&&p.push([p[0][0],p[0][1]]),p.length>2&&r.push(p);}var o=[];e=Math.max(e,.1);for(var i=[],h=0,u=r;h<u.length;h++)for(var p=u[h],c=0;c<p.length-1;c++){var l=p[c],f=p[c+1];if(l[1]!==f[1]){var d=Math.min(l[1],f[1]);i.push({ymin:d,ymax:Math.max(l[1],f[1]),x:d===l[1]?l[0]:f[0],islope:(f[0]-l[0])/(f[1]-l[1])});}}if(i.sort((function(t,e){return t.ymin<e.ymin?-1:t.ymin>e.ymin?1:t.x<e.x?-1:t.x>e.x?1:t.ymax===e.ymax?0:(t.ymax-e.ymax)/Math.abs(t.ymax-e.ymax)})),!i.length)return o;var v=[],g=i[0].ymin;for(;v.length||i.length;){if(i.length){var y=-1;for(c=0;c<i.length&&!(i[c].ymin>g);c++)y=c;i.splice(0,y+1).forEach((function(t){v.push({s:g,edge:t});}));}if((v=v.filter((function(t){return !(t.edge.ymax<=g)}))).sort((function(t,e){return t.edge.x===e.edge.x?0:(t.edge.x-e.edge.x)/Math.abs(t.edge.x-e.edge.x)})),v.length>1)for(c=0;c<v.length;c+=2){var M=c+1;if(M>=v.length)break;var k=v[c].edge,b=v[M].edge;o.push([[Math.round(k.x),g],[Math.round(b.x),g]]);}g+=e,v.forEach((function(t){t.edge.x=t.edge.x+e*t.edge.islope;}));}return o}(t,s);if(r){for(var p=0,c=t;p<c.length;p++){a(c[p],o,-r);}!function(t,e,r){var n=[];t.forEach((function(t){return n.push.apply(n,t)})),a(n,e,r);}(u,o,-r);}return u}var i=function(){function t(t){this.helper=t;}return t.prototype.fillPolygons=function(t,e){return this._fillPolygons(t,e)},t.prototype._fillPolygons=function(t,e){var r=o(t,e);return {type:"fillSketch",ops:this.renderLines(r,e)}},t.prototype.renderLines=function(t,e){for(var r=[],n=0,a=t;n<a.length;n++){var s=a[n];r.push.apply(r,this.helper.doubleLineOps(s[0][0],s[0][1],s[1][0],s[1][1],e));}return r},t}(),h=function(t){function r(){return null!==t&&t.apply(this,arguments)||this}return e(r,t),r.prototype.fillPolygons=function(t,e){var r=e.hachureGap;r<0&&(r=4*e.strokeWidth),r=Math.max(r,.1);for(var a=o(t,Object.assign({},e,{hachureGap:r})),i=Math.PI/180*e.hachureAngle,h=[],u=.5*r*Math.cos(i),p=.5*r*Math.sin(i),c=0,l=a;c<l.length;c++){var f=l[c],d=f[0],v=f[1];s([d,v])&&h.push([[d[0]-u,d[1]+p],n([],v,!0)],[[d[0]+u,d[1]-p],n([],v,!0)]);}return {type:"fillSketch",ops:this.renderLines(h,e)}},r}(i),u=function(t){function r(){return null!==t&&t.apply(this,arguments)||this}return e(r,t),r.prototype.fillPolygons=function(t,e){var r=this._fillPolygons(t,e),n=Object.assign({},e,{hachureAngle:e.hachureAngle+90}),a=this._fillPolygons(t,n);return r.ops=r.ops.concat(a.ops),r},r}(i),p=function(){function t(t){this.helper=t;}return t.prototype.fillPolygons=function(t,e){var r=o(t,e=Object.assign({},e,{hachureAngle:0}));return this.dotsOnLines(r,e)},t.prototype.dotsOnLines=function(t,e){var r=[],n=e.hachureGap;n<0&&(n=4*e.strokeWidth),n=Math.max(n,.1);var a=e.fillWeight;a<0&&(a=e.strokeWidth/2);for(var o=n/4,i=0,h=t;i<h.length;i++)for(var u=h[i],p=s(u),c=p/n,l=Math.ceil(c)-1,f=p-l*n,d=(u[0][0]+u[1][0])/2-n/4,v=Math.min(u[0][1],u[1][1]),g=0;g<l;g++){var y=v+f+g*n,M=d-o+2*Math.random()*o,k=y-o+2*Math.random()*o,b=this.helper.ellipse(M,k,a,a,e);r.push.apply(r,b.ops);}return {type:"fillSketch",ops:r}},t}(),c=function(){function t(t){this.helper=t;}return t.prototype.fillPolygons=function(t,e){var r=o(t,e);return {type:"fillSketch",ops:this.dashedLine(r,e)}},t.prototype.dashedLine=function(t,e){var r=this,n=e.dashOffset<0?e.hachureGap<0?4*e.strokeWidth:e.hachureGap:e.dashOffset,a=e.dashGap<0?e.hachureGap<0?4*e.strokeWidth:e.hachureGap:e.dashGap,o=[];return t.forEach((function(t){var i=s(t),h=Math.floor(i/(n+a)),u=(i+a-h*(n+a))/2,p=t[0],c=t[1];p[0]>c[0]&&(p=t[1],c=t[0]);for(var l=Math.atan((c[1]-p[1])/(c[0]-p[0])),f=0;f<h;f++){var d=f*(n+a),v=d+n,g=[p[0]+d*Math.cos(l)+u*Math.cos(l),p[1]+d*Math.sin(l)+u*Math.sin(l)],y=[p[0]+v*Math.cos(l)+u*Math.cos(l),p[1]+v*Math.sin(l)+u*Math.sin(l)];o.push.apply(o,r.helper.doubleLineOps(g[0],g[1],y[0],y[1],e));}})),o},t}(),l=function(){function t(t){this.helper=t;}return t.prototype.fillPolygons=function(t,e){var r=e.hachureGap<0?4*e.strokeWidth:e.hachureGap,n=e.zigzagOffset<0?r:e.zigzagOffset,a=o(t,e=Object.assign({},e,{hachureGap:r+n}));return {type:"fillSketch",ops:this.zigzagLines(a,n,e)}},t.prototype.zigzagLines=function(t,e,r){var a=this,o=[];return t.forEach((function(t){var i=s(t),h=Math.round(i/(2*e)),u=t[0],p=t[1];u[0]>p[0]&&(u=t[1],p=t[0]);for(var c=Math.atan((p[1]-u[1])/(p[0]-u[0])),l=0;l<h;l++){var f=2*l*e,d=2*(l+1)*e,v=Math.sqrt(2*Math.pow(e,2)),g=[u[0]+f*Math.cos(c),u[1]+f*Math.sin(c)],y=[u[0]+d*Math.cos(c),u[1]+d*Math.sin(c)],M=[g[0]+v*Math.cos(c+Math.PI/4),g[1]+v*Math.sin(c+Math.PI/4)];o.push.apply(o,n(n([],a.helper.doubleLineOps(g[0],g[1],M[0],M[1],r),!1),a.helper.doubleLineOps(M[0],M[1],y[0],y[1],r),!1));}})),o},t}(),f={};var d=function(){function t(t){this.seed=t;}return t.prototype.next=function(){return this.seed?(Math.pow(2,31)-1&(this.seed=Math.imul(48271,this.seed)))/Math.pow(2,31):Math.random()},t}();const v={A:7,a:7,C:6,c:6,H:1,h:1,L:2,l:2,M:2,m:2,Q:4,q:4,S:4,s:4,T:2,t:2,V:1,v:1,Z:0,z:0};function g(t,e){return t.type===e}function y(t){const e=[],r=function(t){const e=new Array;for(;""!==t;)if(t.match(/^([ \t\r\n,]+)/))t=t.substr(RegExp.$1.length);else if(t.match(/^([aAcChHlLmMqQsStTvVzZ])/))e[e.length]={type:0,text:RegExp.$1},t=t.substr(RegExp.$1.length);else {if(!t.match(/^(([-+]?[0-9]+(\.[0-9]*)?|[-+]?\.[0-9]+)([eE][-+]?[0-9]+)?)/))return [];e[e.length]={type:1,text:`${parseFloat(RegExp.$1)}`},t=t.substr(RegExp.$1.length);}return e[e.length]={type:2,text:""},e}(t);let n="BOD",a=0,s=r[a];for(;!g(s,2);){let o=0;const i=[];if("BOD"===n){if("M"!==s.text&&"m"!==s.text)return y("M0,0"+t);a++,o=v[s.text],n=s.text;}else g(s,1)?o=v[n]:(a++,o=v[s.text],n=s.text);if(!(a+o<r.length))throw new Error("Path data ended short");for(let t=a;t<a+o;t++){const e=r[t];if(!g(e,1))throw new Error("Param not a number: "+n+","+e.text);i[i.length]=+e.text;}if("number"!=typeof v[n])throw new Error("Bad segment: "+n);{const t={key:n,data:i};e.push(t),a+=o,s=r[a],"M"===n&&(n="L"),"m"===n&&(n="l");}}return e}function M(t){let e=0,r=0,n=0,a=0;const s=[];for(const{key:o,data:i}of t)switch(o){case"M":s.push({key:"M",data:[...i]}),[e,r]=i,[n,a]=i;break;case"m":e+=i[0],r+=i[1],s.push({key:"M",data:[e,r]}),n=e,a=r;break;case"L":s.push({key:"L",data:[...i]}),[e,r]=i;break;case"l":e+=i[0],r+=i[1],s.push({key:"L",data:[e,r]});break;case"C":s.push({key:"C",data:[...i]}),e=i[4],r=i[5];break;case"c":{const t=i.map(((t,n)=>n%2?t+r:t+e));s.push({key:"C",data:t}),e=t[4],r=t[5];break}case"Q":s.push({key:"Q",data:[...i]}),e=i[2],r=i[3];break;case"q":{const t=i.map(((t,n)=>n%2?t+r:t+e));s.push({key:"Q",data:t}),e=t[2],r=t[3];break}case"A":s.push({key:"A",data:[...i]}),e=i[5],r=i[6];break;case"a":e+=i[5],r+=i[6],s.push({key:"A",data:[i[0],i[1],i[2],i[3],i[4],e,r]});break;case"H":s.push({key:"H",data:[...i]}),e=i[0];break;case"h":e+=i[0],s.push({key:"H",data:[e]});break;case"V":s.push({key:"V",data:[...i]}),r=i[0];break;case"v":r+=i[0],s.push({key:"V",data:[r]});break;case"S":s.push({key:"S",data:[...i]}),e=i[2],r=i[3];break;case"s":{const t=i.map(((t,n)=>n%2?t+r:t+e));s.push({key:"S",data:t}),e=t[2],r=t[3];break}case"T":s.push({key:"T",data:[...i]}),e=i[0],r=i[1];break;case"t":e+=i[0],r+=i[1],s.push({key:"T",data:[e,r]});break;case"Z":case"z":s.push({key:"Z",data:[]}),e=n,r=a;}return s}function k(t){const e=[];let r="",n=0,a=0,s=0,o=0,i=0,h=0;for(const{key:u,data:p}of t){switch(u){case"M":e.push({key:"M",data:[...p]}),[n,a]=p,[s,o]=p;break;case"C":e.push({key:"C",data:[...p]}),n=p[4],a=p[5],i=p[2],h=p[3];break;case"L":e.push({key:"L",data:[...p]}),[n,a]=p;break;case"H":n=p[0],e.push({key:"L",data:[n,a]});break;case"V":a=p[0],e.push({key:"L",data:[n,a]});break;case"S":{let t=0,s=0;"C"===r||"S"===r?(t=n+(n-i),s=a+(a-h)):(t=n,s=a),e.push({key:"C",data:[t,s,...p]}),i=p[0],h=p[1],n=p[2],a=p[3];break}case"T":{const[t,s]=p;let o=0,u=0;"Q"===r||"T"===r?(o=n+(n-i),u=a+(a-h)):(o=n,u=a);const c=n+2*(o-n)/3,l=a+2*(u-a)/3,f=t+2*(o-t)/3,d=s+2*(u-s)/3;e.push({key:"C",data:[c,l,f,d,t,s]}),i=o,h=u,n=t,a=s;break}case"Q":{const[t,r,s,o]=p,u=n+2*(t-n)/3,c=a+2*(r-a)/3,l=s+2*(t-s)/3,f=o+2*(r-o)/3;e.push({key:"C",data:[u,c,l,f,s,o]}),i=t,h=r,n=s,a=o;break}case"A":{const t=Math.abs(p[0]),r=Math.abs(p[1]),s=p[2],o=p[3],i=p[4],h=p[5],u=p[6];if(0===t||0===r)e.push({key:"C",data:[n,a,h,u,h,u]}),n=h,a=u;else if(n!==h||a!==u){m(n,a,h,u,t,r,s,o,i).forEach((function(t){e.push({key:"C",data:t});})),n=h,a=u;}break}case"Z":e.push({key:"Z",data:[]}),n=s,a=o;}r=u;}return e}function b(t,e,r){return [t*Math.cos(r)-e*Math.sin(r),t*Math.sin(r)+e*Math.cos(r)]}function m(t,e,r,n,a,s,o,i,h,u){const p=(c=o,Math.PI*c/180);var c;let l=[],f=0,d=0,v=0,g=0;if(u)[f,d,v,g]=u;else {[t,e]=b(t,e,-p),[r,n]=b(r,n,-p);const o=(t-r)/2,u=(e-n)/2;let c=o*o/(a*a)+u*u/(s*s);c>1&&(c=Math.sqrt(c),a*=c,s*=c);const l=a*a,y=s*s,M=l*y-l*u*u-y*o*o,k=l*u*u+y*o*o,m=(i===h?-1:1)*Math.sqrt(Math.abs(M/k));v=m*a*u/s+(t+r)/2,g=m*-s*o/a+(e+n)/2,f=Math.asin(parseFloat(((e-g)/s).toFixed(9))),d=Math.asin(parseFloat(((n-g)/s).toFixed(9))),t<v&&(f=Math.PI-f),r<v&&(d=Math.PI-d),f<0&&(f=2*Math.PI+f),d<0&&(d=2*Math.PI+d),h&&f>d&&(f-=2*Math.PI),!h&&d>f&&(d-=2*Math.PI);}let y=d-f;if(Math.abs(y)>120*Math.PI/180){const t=d,e=r,i=n;d=h&&d>f?f+120*Math.PI/180*1:f+120*Math.PI/180*-1,l=m(r=v+a*Math.cos(d),n=g+s*Math.sin(d),e,i,a,s,o,0,h,[d,t,v,g]);}y=d-f;const M=Math.cos(f),k=Math.sin(f),w=Math.cos(d),P=Math.sin(d),x=Math.tan(y/4),O=4/3*a*x,S=4/3*s*x,L=[t,e],T=[t+O*k,e-S*M],_=[r+O*P,n-S*w],D=[r,n];if(T[0]=2*L[0]-T[0],T[1]=2*L[1]-T[1],u)return [T,_,D].concat(l);{l=[T,_,D].concat(l);const t=[];for(let e=0;e<l.length;e+=3){const r=b(l[e][0],l[e][1],p),n=b(l[e+1][0],l[e+1][1],p),a=b(l[e+2][0],l[e+2][1],p);t.push([r[0],r[1],n[0],n[1],a[0],a[1]]);}return t}}var w={randOffset:function(t,e){return z(t,e)},randOffsetWithRange:function(t,e,r){return W(t,e,r)},ellipse:function(t,e,r,n,a){var s=L(r,n,a);return T(t,e,a,s).opset},doubleLineOps:function(t,e,r,n,a){return E(t,e,r,n,a,!0)}};function P(t,e,r,n,a){return {type:"path",ops:E(t,e,r,n,a)}}function x(t,e,r){var n=(t||[]).length;if(n>2){for(var a=[],s=0;s<n-1;s++)a.push.apply(a,E(t[s][0],t[s][1],t[s+1][0],t[s+1][1],r));return e&&a.push.apply(a,E(t[n-1][0],t[n-1][1],t[0][0],t[0][1],r)),{type:"path",ops:a}}return 2===n?P(t[0][0],t[0][1],t[1][0],t[1][1],r):{type:"path",ops:[]}}function O(t,e,r,n,a){return function(t,e){return x(t,!0,e)}([[t,e],[t+r,e],[t+r,e+n],[t,e+n]],a)}function S(t,e){var n=G(t,1*(1+.2*e.roughness),e);if(!e.disableMultiStroke){var a=G(t,1.5*(1+.22*e.roughness),function(t){var e=r({},t);e.randomizer=void 0,t.seed&&(e.seed=t.seed+1);return e}(e));n=n.concat(a);}return {type:"path",ops:n}}function L(t,e,r){var n=Math.sqrt(2*Math.PI*Math.sqrt((Math.pow(t/2,2)+Math.pow(e/2,2))/2)),a=Math.ceil(Math.max(r.curveStepCount,r.curveStepCount/Math.sqrt(200)*n)),s=2*Math.PI/a,o=Math.abs(t/2),i=Math.abs(e/2),h=1-r.curveFitting;return {increment:s,rx:o+=z(o*h,r),ry:i+=z(i*h,r)}}function T(t,e,r,n){var a=q(n.increment,t,e,n.rx,n.ry,1,n.increment*W(.1,W(.4,1,r),r),r),s=a[0],o=a[1],i=R(s,null,r);if(!r.disableMultiStroke&&0!==r.roughness){var h=R(q(n.increment,t,e,n.rx,n.ry,1.5,0,r)[0],null,r);i=i.concat(h);}return {estimatedPoints:o,opset:{type:"path",ops:i}}}function _(t,e,r,a,s,o,i,h,u){var p=t,c=e,l=Math.abs(r/2),f=Math.abs(a/2);l+=z(.01*l,u),f+=z(.01*f,u);for(var d=s,v=o;d<0;)d+=2*Math.PI,v+=2*Math.PI;v-d>2*Math.PI&&(d=0,v=2*Math.PI);var g=2*Math.PI/u.curveStepCount,y=Math.min(g/2,(v-d)/2),M=F(y,p,c,l,f,d,v,1,u);if(!u.disableMultiStroke){var k=F(y,p,c,l,f,d,v,1.5,u);M.push.apply(M,k);}return i&&(h?M.push.apply(M,n(n([],E(p,c,p+l*Math.cos(d),c+f*Math.sin(d),u),!1),E(p,c,p+l*Math.cos(v),c+f*Math.sin(v),u),!1)):M.push({op:"lineTo",data:[p,c]},{op:"lineTo",data:[p+l*Math.cos(d),c+f*Math.sin(d)]})),{type:"path",ops:M}}function D(t,e){for(var r=k(M(y(t))),n=[],a=[0,0],s=[0,0],o=function(t,r){switch(t){case"M":var o=1*(e.maxRandomnessOffset||0),i=e.preserveVertices;n.push({op:"move",data:r.map((function(t){return t+(i?0:z(o,e))}))}),s=[r[0],r[1]],a=[r[0],r[1]];break;case"L":n.push.apply(n,E(s[0],s[1],r[0],r[1],e)),s=[r[0],r[1]];break;case"C":var h=r[0],u=r[1],p=r[2],c=r[3],l=r[4],f=r[5];n.push.apply(n,function(t,e,r,n,a,s,o,i){for(var h=[],u=[i.maxRandomnessOffset||1,(i.maxRandomnessOffset||1)+.3],p=[0,0],c=i.disableMultiStroke?1:2,l=i.preserveVertices,f=0;f<c;f++)0===f?h.push({op:"move",data:[o[0],o[1]]}):h.push({op:"move",data:[o[0]+(l?0:z(u[0],i)),o[1]+(l?0:z(u[0],i))]}),p=l?[a,s]:[a+z(u[f],i),s+z(u[f],i)],h.push({op:"bcurveTo",data:[t+z(u[f],i),e+z(u[f],i),r+z(u[f],i),n+z(u[f],i),p[0],p[1]]});return h}(h,u,p,c,l,f,s,e)),s=[l,f];break;case"Z":n.push.apply(n,E(s[0],s[1],a[0],a[1],e)),s=[a[0],a[1]];}},i=0,h=r;i<h.length;i++){var u=h[i];o(u.key,u.data);}return {type:"path",ops:n}}function A(t,e){for(var r=[],n=0,a=t;n<a.length;n++){var s=a[n];if(s.length){var o=e.maxRandomnessOffset||0,i=s.length;if(i>2){r.push({op:"move",data:[s[0][0]+z(o,e),s[0][1]+z(o,e)]});for(var h=1;h<i;h++)r.push({op:"lineTo",data:[s[h][0]+z(o,e),s[h][1]+z(o,e)]});}}}return {type:"fillPath",ops:r}}function I(t,e){return function(t,e){var r=t.fillStyle||"hachure";if(!f[r])switch(r){case"zigzag":f[r]||(f[r]=new h(e));break;case"cross-hatch":f[r]||(f[r]=new u(e));break;case"dots":f[r]||(f[r]=new p(e));break;case"dashed":f[r]||(f[r]=new c(e));break;case"zigzag-line":f[r]||(f[r]=new l(e));break;case"hachure":default:f[r="hachure"]||(f[r]=new i(e));}return f[r]}(e,w).fillPolygons(t,e)}function C(t){return t.randomizer||(t.randomizer=new d(t.seed||0)),t.randomizer.next()}function W(t,e,r,n){return void 0===n&&(n=1),r.roughness*n*(C(r)*(e-t)+t)}function z(t,e,r){return void 0===r&&(r=1),W(-t,t,e,r)}function E(t,e,r,n,a,s){void 0===s&&(s=!1);var o=s?a.disableMultiStrokeFill:a.disableMultiStroke,i=j(t,e,r,n,a,!0,!1);if(o)return i;var h=j(t,e,r,n,a,!0,!0);return i.concat(h)}function j(t,e,r,n,a,s,o){var i=Math.pow(t-r,2)+Math.pow(e-n,2),h=Math.sqrt(i),u=1;u=h<200?1:h>500?.4:-.0016668*h+1.233334;var p=a.maxRandomnessOffset||0;p*p*100>i&&(p=h/10);var c=p/2,l=.2+.2*C(a),f=a.bowing*a.maxRandomnessOffset*(n-e)/200,d=a.bowing*a.maxRandomnessOffset*(t-r)/200;f=z(f,a,u),d=z(d,a,u);var v=[],g=function(){return z(c,a,u)},y=function(){return z(p,a,u)},M=a.preserveVertices;return s&&(o?v.push({op:"move",data:[t+(M?0:g()),e+(M?0:g())]}):v.push({op:"move",data:[t+(M?0:z(p,a,u)),e+(M?0:z(p,a,u))]})),o?v.push({op:"bcurveTo",data:[f+t+(r-t)*l+g(),d+e+(n-e)*l+g(),f+t+2*(r-t)*l+g(),d+e+2*(n-e)*l+g(),r+(M?0:g()),n+(M?0:g())]}):v.push({op:"bcurveTo",data:[f+t+(r-t)*l+y(),d+e+(n-e)*l+y(),f+t+2*(r-t)*l+y(),d+e+2*(n-e)*l+y(),r+(M?0:y()),n+(M?0:y())]}),v}function G(t,e,r){var n=[];n.push([t[0][0]+z(e,r),t[0][1]+z(e,r)]),n.push([t[0][0]+z(e,r),t[0][1]+z(e,r)]);for(var a=1;a<t.length;a++)n.push([t[a][0]+z(e,r),t[a][1]+z(e,r)]),a===t.length-1&&n.push([t[a][0]+z(e,r),t[a][1]+z(e,r)]);return R(n,null,r)}function R(t,e,r){var n=t.length,a=[];if(n>3){var s=[],o=1-r.curveTightness;a.push({op:"move",data:[t[1][0],t[1][1]]});for(var i=1;i+2<n;i++){var h=t[i];s[0]=[h[0],h[1]],s[1]=[h[0]+(o*t[i+1][0]-o*t[i-1][0])/6,h[1]+(o*t[i+1][1]-o*t[i-1][1])/6],s[2]=[t[i+1][0]+(o*t[i][0]-o*t[i+2][0])/6,t[i+1][1]+(o*t[i][1]-o*t[i+2][1])/6],s[3]=[t[i+1][0],t[i+1][1]],a.push({op:"bcurveTo",data:[s[1][0],s[1][1],s[2][0],s[2][1],s[3][0],s[3][1]]});}if(e&&2===e.length){var u=r.maxRandomnessOffset;a.push({op:"lineTo",data:[e[0]+z(u,r),e[1]+z(u,r)]});}}else 3===n?(a.push({op:"move",data:[t[1][0],t[1][1]]}),a.push({op:"bcurveTo",data:[t[1][0],t[1][1],t[2][0],t[2][1],t[2][0],t[2][1]]})):2===n&&a.push.apply(a,E(t[0][0],t[0][1],t[1][0],t[1][1],r));return a}function q(t,e,r,n,a,s,o,i){var h=[],u=[];if(0===i.roughness){t/=4,u.push([e+n*Math.cos(-t),r+a*Math.sin(-t)]);for(var p=0;p<=2*Math.PI;p+=t){var c=[e+n*Math.cos(p),r+a*Math.sin(p)];h.push(c),u.push(c);}u.push([e+n*Math.cos(0),r+a*Math.sin(0)]),u.push([e+n*Math.cos(t),r+a*Math.sin(t)]);}else {var l=z(.5,i)-Math.PI/2;u.push([z(s,i)+e+.9*n*Math.cos(l-t),z(s,i)+r+.9*a*Math.sin(l-t)]);var f=2*Math.PI+l-.01;for(p=l;p<f;p+=t){c=[z(s,i)+e+n*Math.cos(p),z(s,i)+r+a*Math.sin(p)];h.push(c),u.push(c);}u.push([z(s,i)+e+n*Math.cos(l+2*Math.PI+.5*o),z(s,i)+r+a*Math.sin(l+2*Math.PI+.5*o)]),u.push([z(s,i)+e+.98*n*Math.cos(l+o),z(s,i)+r+.98*a*Math.sin(l+o)]),u.push([z(s,i)+e+.9*n*Math.cos(l+.5*o),z(s,i)+r+.9*a*Math.sin(l+.5*o)]);}return [u,h]}function F(t,e,r,n,a,s,o,i,h){var u=s+z(.1,h),p=[];p.push([z(i,h)+e+.9*n*Math.cos(u-t),z(i,h)+r+.9*a*Math.sin(u-t)]);for(var c=u;c<=o;c+=t)p.push([z(i,h)+e+n*Math.cos(c),z(i,h)+r+a*Math.sin(c)]);return p.push([e+n*Math.cos(o),r+a*Math.sin(o)]),p.push([e+n*Math.cos(o),r+a*Math.sin(o)]),R(p,null,h)}function V(t){return [...t]}function Z(t,e){return Math.pow(t[0]-e[0],2)+Math.pow(t[1]-e[1],2)}function Q(t,e,r){const n=Z(e,r);if(0===n)return Z(t,e);let a=((t[0]-e[0])*(r[0]-e[0])+(t[1]-e[1])*(r[1]-e[1]))/n;return a=Math.max(0,Math.min(1,a)),Z(t,H(e,r,a))}function H(t,e,r){return [t[0]+(e[0]-t[0])*r,t[1]+(e[1]-t[1])*r]}function $(t,e,r,n){const a=n||[];if(function(t,e){const r=t[e+0],n=t[e+1],a=t[e+2],s=t[e+3];let o=3*n[0]-2*r[0]-s[0];o*=o;let i=3*n[1]-2*r[1]-s[1];i*=i;let h=3*a[0]-2*s[0]-r[0];h*=h;let u=3*a[1]-2*s[1]-r[1];return u*=u,o<h&&(o=h),i<u&&(i=u),o+i}(t,e)<r){const r=t[e+0];if(a.length){(s=a[a.length-1],o=r,Math.sqrt(Z(s,o)))>1&&a.push(r);}else a.push(r);a.push(t[e+3]);}else {const n=.5,s=t[e+0],o=t[e+1],i=t[e+2],h=t[e+3],u=H(s,o,n),p=H(o,i,n),c=H(i,h,n),l=H(u,p,n),f=H(p,c,n),d=H(l,f,n);$([s,u,l,d],0,r,a),$([d,f,c,h],0,r,a);}var s,o;return a}function N(t,e){return B(t,0,t.length,e)}function B(t,e,r,n,a){const s=a||[],o=t[e],i=t[r-1];let h=0,u=1;for(let n=e+1;n<r-1;++n){const e=Q(t[n],o,i);e>h&&(h=e,u=n);}return Math.sqrt(h)>n?(B(t,e,u+1,n,s),B(t,u,r,n,s)):(s.length||s.push(o),s.push(i)),s}function J(t,e=.15,r){const n=[],a=(t.length-1)/3;for(let r=0;r<a;r++){$(t,3*r,e,n);}return r&&r>0?B(n,0,n.length,r):n}var K="none",U=function(){function t(t){this.defaultOptions={maxRandomnessOffset:2,roughness:1,bowing:1,stroke:"#000",strokeWidth:1,curveTightness:0,curveFitting:.95,curveStepCount:9,fillStyle:"hachure",fillWeight:-1,hachureAngle:-41,hachureGap:-1,dashOffset:-1,dashGap:-1,zigzagOffset:-1,seed:0,disableMultiStroke:!1,disableMultiStrokeFill:!1,preserveVertices:!1},this.config=t||{},this.config.options&&(this.defaultOptions=this._o(this.config.options));}return t.newSeed=function(){return Math.floor(Math.random()*Math.pow(2,31))},t.prototype._o=function(t){return t?Object.assign({},this.defaultOptions,t):this.defaultOptions},t.prototype._d=function(t,e,r){return {shape:t,sets:e||[],options:r||this.defaultOptions}},t.prototype.line=function(t,e,r,n,a){var s=this._o(a);return this._d("line",[P(t,e,r,n,s)],s)},t.prototype.rectangle=function(t,e,r,n,a){var s=this._o(a),o=[],i=O(t,e,r,n,s);if(s.fill){var h=[[t,e],[t+r,e],[t+r,e+n],[t,e+n]];"solid"===s.fillStyle?o.push(A([h],s)):o.push(I([h],s));}return s.stroke!==K&&o.push(i),this._d("rectangle",o,s)},t.prototype.ellipse=function(t,e,r,n,a){var s=this._o(a),o=[],i=L(r,n,s),h=T(t,e,s,i);if(s.fill)if("solid"===s.fillStyle){var u=T(t,e,s,i).opset;u.type="fillPath",o.push(u);}else o.push(I([h.estimatedPoints],s));return s.stroke!==K&&o.push(h.opset),this._d("ellipse",o,s)},t.prototype.circle=function(t,e,r,n){var a=this.ellipse(t,e,r,r,n);return a.shape="circle",a},t.prototype.linearPath=function(t,e){var r=this._o(e);return this._d("linearPath",[x(t,!1,r)],r)},t.prototype.arc=function(t,e,n,a,s,o,i,h){void 0===i&&(i=!1);var u=this._o(h),p=[],c=_(t,e,n,a,s,o,i,!0,u);if(i&&u.fill)if("solid"===u.fillStyle){var l=r({},u);l.disableMultiStroke=!0;var f=_(t,e,n,a,s,o,!0,!1,l);f.type="fillPath",p.push(f);}else p.push(function(t,e,r,n,a,s,o){var i=t,h=e,u=Math.abs(r/2),p=Math.abs(n/2);u+=z(.01*u,o),p+=z(.01*p,o);for(var c=a,l=s;c<0;)c+=2*Math.PI,l+=2*Math.PI;l-c>2*Math.PI&&(c=0,l=2*Math.PI);for(var f=(l-c)/o.curveStepCount,d=[],v=c;v<=l;v+=f)d.push([i+u*Math.cos(v),h+p*Math.sin(v)]);return d.push([i+u*Math.cos(l),h+p*Math.sin(l)]),d.push([i,h]),I([d],o)}(t,e,n,a,s,o,u));return u.stroke!==K&&p.push(c),this._d("arc",p,u)},t.prototype.curve=function(t,e){var r=this._o(e),n=[],a=S(t,r);if(r.fill&&r.fill!==K&&t.length>=3){var s=J(function(t,e=0){const r=t.length;if(r<3)throw new Error("A curve must have at least three points.");const n=[];if(3===r)n.push(V(t[0]),V(t[1]),V(t[2]),V(t[2]));else {const r=[];r.push(t[0],t[0]);for(let e=1;e<t.length;e++)r.push(t[e]),e===t.length-1&&r.push(t[e]);const a=[],s=1-e;n.push(V(r[0]));for(let t=1;t+2<r.length;t++){const e=r[t];a[0]=[e[0],e[1]],a[1]=[e[0]+(s*r[t+1][0]-s*r[t-1][0])/6,e[1]+(s*r[t+1][1]-s*r[t-1][1])/6],a[2]=[r[t+1][0]+(s*r[t][0]-s*r[t+2][0])/6,r[t+1][1]+(s*r[t][1]-s*r[t+2][1])/6],a[3]=[r[t+1][0],r[t+1][1]],n.push(a[1],a[2],a[3]);}}return n}(t),10,(1+r.roughness)/2);"solid"===r.fillStyle?n.push(A([s],r)):n.push(I([s],r));}return r.stroke!==K&&n.push(a),this._d("curve",n,r)},t.prototype.polygon=function(t,e){var r=this._o(e),n=[],a=x(t,!0,r);return r.fill&&("solid"===r.fillStyle?n.push(A([t],r)):n.push(I([t],r))),r.stroke!==K&&n.push(a),this._d("polygon",n,r)},t.prototype.path=function(t,e){var r=this._o(e),n=[];if(!t)return this._d("path",n,r);t=(t||"").replace(/\n/g," ").replace(/(-\s)/g,"-").replace("/(ss)/g"," ");var a=r.fill&&"transparent"!==r.fill&&r.fill!==K,s=r.stroke!==K,o=!!(r.simplification&&r.simplification<1),i=function(t,e,r){const n=k(M(y(t))),a=[];let s=[],o=[0,0],i=[];const h=()=>{i.length>=4&&s.push(...J(i,e)),i=[];},u=()=>{h(),s.length&&(a.push(s),s=[]);};for(const{key:t,data:e}of n)switch(t){case"M":u(),o=[e[0],e[1]],s.push(o);break;case"L":h(),s.push([e[0],e[1]]);break;case"C":if(!i.length){const t=s.length?s[s.length-1]:o;i.push([t[0],t[1]]);}i.push([e[0],e[1]]),i.push([e[2],e[3]]),i.push([e[4],e[5]]);break;case"Z":h(),s.push([o[0],o[1]]);}if(u(),!r)return a;const p=[];for(const t of a){const e=N(t,r);e.length&&p.push(e);}return p}(t,1,o?4-4*r.simplification:(1+r.roughness)/2);return a&&("solid"===r.fillStyle?n.push(A(i,r)):n.push(I(i,r))),s&&(o?i.forEach((function(t){n.push(x(t,!1,r));})):n.push(D(t,r))),this._d("path",n,r)},t.prototype.opsToPath=function(t,e){for(var r="",n=0,a=t.ops;n<a.length;n++){var s=a[n],o="number"==typeof e&&e>=0?s.data.map((function(t){return +t.toFixed(e)})):s.data;switch(s.op){case"move":r+="M".concat(o[0]," ").concat(o[1]," ");break;case"bcurveTo":r+="C".concat(o[0]," ").concat(o[1],", ").concat(o[2]," ").concat(o[3],", ").concat(o[4]," ").concat(o[5]," ");break;case"lineTo":r+="L".concat(o[0]," ").concat(o[1]," ");}}return r.trim()},t.prototype.toPaths=function(t){for(var e=t.sets||[],r=t.options||this.defaultOptions,n=[],a=0,s=e;a<s.length;a++){var o=s[a],i=null;switch(o.type){case"path":i={d:this.opsToPath(o),stroke:r.stroke,strokeWidth:r.strokeWidth,fill:K};break;case"fillPath":i={d:this.opsToPath(o),stroke:K,strokeWidth:0,fill:r.fill||K};break;case"fillSketch":i=this.fillSketch(o,r);}i&&n.push(i);}return n},t.prototype.fillSketch=function(t,e){var r=e.fillWeight;return r<0&&(r=e.strokeWidth/2),{d:this.opsToPath(t),stroke:e.fill||K,strokeWidth:r,fill:K}},t}(),X=function(){function t(t,e){this.canvas=t,this.ctx=this.canvas.getContext("2d"),this.gen=new U(e);}return t.prototype.draw=function(t){for(var e=t.sets||[],r=t.options||this.getDefaultOptions(),n=this.ctx,a=t.options.fixedDecimalPlaceDigits,s=0,o=e;s<o.length;s++){var i=o[s];switch(i.type){case"path":n.save(),n.strokeStyle="none"===r.stroke?"transparent":r.stroke,n.lineWidth=r.strokeWidth,r.strokeLineDash&&n.setLineDash(r.strokeLineDash),r.strokeLineDashOffset&&(n.lineDashOffset=r.strokeLineDashOffset),this._drawToContext(n,i,a),n.restore();break;case"fillPath":n.save(),n.fillStyle=r.fill||"";var h="curve"===t.shape||"polygon"===t.shape||"path"===t.shape?"evenodd":"nonzero";this._drawToContext(n,i,a,h),n.restore();break;case"fillSketch":this.fillSketch(n,i,r);}}},t.prototype.fillSketch=function(t,e,r){var n=r.fillWeight;n<0&&(n=r.strokeWidth/2),t.save(),r.fillLineDash&&t.setLineDash(r.fillLineDash),r.fillLineDashOffset&&(t.lineDashOffset=r.fillLineDashOffset),t.strokeStyle=r.fill||"",t.lineWidth=n,this._drawToContext(t,e,r.fixedDecimalPlaceDigits),t.restore();},t.prototype._drawToContext=function(t,e,r,n){void 0===n&&(n="nonzero"),t.beginPath();for(var a=0,s=e.ops;a<s.length;a++){var o=s[a],i="number"==typeof r&&r>=0?o.data.map((function(t){return +t.toFixed(r)})):o.data;switch(o.op){case"move":t.moveTo(i[0],i[1]);break;case"bcurveTo":t.bezierCurveTo(i[0],i[1],i[2],i[3],i[4],i[5]);break;case"lineTo":t.lineTo(i[0],i[1]);}}"fillPath"===e.type?t.fill(n):t.stroke();},Object.defineProperty(t.prototype,"generator",{get:function(){return this.gen},enumerable:!1,configurable:!0}),t.prototype.getDefaultOptions=function(){return this.gen.defaultOptions},t.prototype.line=function(t,e,r,n,a){var s=this.gen.line(t,e,r,n,a);return this.draw(s),s},t.prototype.rectangle=function(t,e,r,n,a){var s=this.gen.rectangle(t,e,r,n,a);return this.draw(s),s},t.prototype.ellipse=function(t,e,r,n,a){var s=this.gen.ellipse(t,e,r,n,a);return this.draw(s),s},t.prototype.circle=function(t,e,r,n){var a=this.gen.circle(t,e,r,n);return this.draw(a),a},t.prototype.linearPath=function(t,e){var r=this.gen.linearPath(t,e);return this.draw(r),r},t.prototype.polygon=function(t,e){var r=this.gen.polygon(t,e);return this.draw(r),r},t.prototype.arc=function(t,e,r,n,a,s,o,i){void 0===o&&(o=!1);var h=this.gen.arc(t,e,r,n,a,s,o,i);return this.draw(h),h},t.prototype.curve=function(t,e){var r=this.gen.curve(t,e);return this.draw(r),r},t.prototype.path=function(t,e){var r=this.gen.path(t,e);return this.draw(r),r},t}(),Y="http://www.w3.org/2000/svg",tt=function(){function t(t,e){this.svg=t,this.gen=new U(e);}return t.prototype.draw=function(t){for(var e=t.sets||[],r=t.options||this.getDefaultOptions(),n=this.svg.ownerDocument||window.document,a=n.createElementNS(Y,"g"),s=t.options.fixedDecimalPlaceDigits,o=0,i=e;o<i.length;o++){var h=i[o],u=null;switch(h.type){case"path":(u=n.createElementNS(Y,"path")).setAttribute("d",this.opsToPath(h,s)),u.setAttribute("stroke",r.stroke),u.setAttribute("stroke-width",r.strokeWidth+""),u.setAttribute("fill","none"),r.strokeLineDash&&u.setAttribute("stroke-dasharray",r.strokeLineDash.join(" ").trim()),r.strokeLineDashOffset&&u.setAttribute("stroke-dashoffset","".concat(r.strokeLineDashOffset));break;case"fillPath":(u=n.createElementNS(Y,"path")).setAttribute("d",this.opsToPath(h,s)),u.setAttribute("stroke","none"),u.setAttribute("stroke-width","0"),u.setAttribute("fill",r.fill||""),"curve"!==t.shape&&"polygon"!==t.shape||u.setAttribute("fill-rule","evenodd");break;case"fillSketch":u=this.fillSketch(n,h,r);}u&&a.appendChild(u);}return a},t.prototype.fillSketch=function(t,e,r){var n=r.fillWeight;n<0&&(n=r.strokeWidth/2);var a=t.createElementNS(Y,"path");return a.setAttribute("d",this.opsToPath(e,r.fixedDecimalPlaceDigits)),a.setAttribute("stroke",r.fill||""),a.setAttribute("stroke-width",n+""),a.setAttribute("fill","none"),r.fillLineDash&&a.setAttribute("stroke-dasharray",r.fillLineDash.join(" ").trim()),r.fillLineDashOffset&&a.setAttribute("stroke-dashoffset","".concat(r.fillLineDashOffset)),a},Object.defineProperty(t.prototype,"generator",{get:function(){return this.gen},enumerable:!1,configurable:!0}),t.prototype.getDefaultOptions=function(){return this.gen.defaultOptions},t.prototype.opsToPath=function(t,e){return this.gen.opsToPath(t,e)},t.prototype.line=function(t,e,r,n,a){var s=this.gen.line(t,e,r,n,a);return this.draw(s)},t.prototype.rectangle=function(t,e,r,n,a){var s=this.gen.rectangle(t,e,r,n,a);return this.draw(s)},t.prototype.ellipse=function(t,e,r,n,a){var s=this.gen.ellipse(t,e,r,n,a);return this.draw(s)},t.prototype.circle=function(t,e,r,n){var a=this.gen.circle(t,e,r,n);return this.draw(a)},t.prototype.linearPath=function(t,e){var r=this.gen.linearPath(t,e);return this.draw(r)},t.prototype.polygon=function(t,e){var r=this.gen.polygon(t,e);return this.draw(r)},t.prototype.arc=function(t,e,r,n,a,s,o,i){void 0===o&&(o=!1);var h=this.gen.arc(t,e,r,n,a,s,o,i);return this.draw(h)},t.prototype.curve=function(t,e){var r=this.gen.curve(t,e);return this.draw(r)},t.prototype.path=function(t,e){var r=this.gen.path(t,e);return this.draw(r)},t}(),et={canvas:function(t,e){return new X(t,e)},svg:function(t,e){return new tt(t,e)},generator:function(t){return new U(t)},newSeed:function(){return U.newSeed()}};var rough_cjs=et;
+
+    /* src/App.svelte generated by Svelte v3.44.3 */
+
+    const { console: console_1 } = globals;
+    const file = "src/App.svelte";
+
+    function create_fragment(ctx) {
+    	let section0;
+    	let div8;
+    	let div0;
+    	let dropzone;
+    	let t0;
+    	let div7;
+    	let div2;
+    	let div1;
+    	let t1;
+    	let t2;
+    	let t3;
+    	let slider0;
+    	let t4;
+    	let div4;
+    	let div3;
+    	let t5;
+    	let t6;
+    	let t7;
+    	let slider1;
+    	let t8;
+    	let div6;
+    	let div5;
+    	let t9;
+    	let t10;
+    	let t11;
+    	let slider2;
+    	let t12;
+    	let section1;
+    	let main;
+    	let div9;
+    	let svg;
+    	let current;
+
+    	dropzone = new Dropzone({
+    			props: { multiple: false, accept: "image/svg+xml" },
+    			$$inline: true
+    		});
+
+    	dropzone.$on("drop", /*handleFilesSelect*/ ctx[5]);
+
+    	slider0 = new Slider({
+    			props: {
+    				value: [0, /*roughness*/ ctx[0] / 5],
+    				single: true
+    			},
+    			$$inline: true
+    		});
+
+    	slider0.$on("change", /*change_handler*/ ctx[7]);
+
+    	slider1 = new Slider({
+    			props: {
+    				value: [0, /*bowing*/ ctx[1] / 5],
+    				single: true
+    			},
+    			$$inline: true
+    		});
+
+    	slider1.$on("change", /*change_handler_1*/ ctx[8]);
+
+    	slider2 = new Slider({
+    			props: {
+    				value: [0, /*simplification*/ ctx[2] / 5],
+    				single: true
+    			},
+    			$$inline: true
+    		});
+
+    	slider2.$on("change", /*change_handler_2*/ ctx[9]);
+    	let svg_levels = [/*svgArgs*/ ctx[4]];
+    	let svg_data = {};
+
+    	for (let i = 0; i < svg_levels.length; i += 1) {
+    		svg_data = assign(svg_data, svg_levels[i]);
+    	}
+
+    	const block = {
+    		c: function create() {
+    			section0 = element("section");
+    			div8 = element("div");
+    			div0 = element("div");
+    			create_component(dropzone.$$.fragment);
+    			t0 = space();
+    			div7 = element("div");
+    			div2 = element("div");
+    			div1 = element("div");
+    			t1 = text("roughness: ");
+    			t2 = text(/*roughness*/ ctx[0]);
+    			t3 = space();
+    			create_component(slider0.$$.fragment);
+    			t4 = space();
+    			div4 = element("div");
+    			div3 = element("div");
+    			t5 = text("bowing: ");
+    			t6 = text(/*bowing*/ ctx[1]);
+    			t7 = space();
+    			create_component(slider1.$$.fragment);
+    			t8 = space();
+    			div6 = element("div");
+    			div5 = element("div");
+    			t9 = text("simplification: ");
+    			t10 = text(/*simplification*/ ctx[2]);
+    			t11 = space();
+    			create_component(slider2.$$.fragment);
+    			t12 = space();
+    			section1 = element("section");
+    			main = element("main");
+    			div9 = element("div");
+    			svg = svg_element("svg");
+    			attr_dev(div0, "class", "block");
+    			add_location(div0, file, 124, 8, 4345);
+    			add_location(div1, file, 129, 16, 4558);
+    			attr_dev(div2, "class", "column");
+    			add_location(div2, file, 128, 12, 4521);
+    			add_location(div3, file, 137, 16, 4854);
+    			attr_dev(div4, "class", "column");
+    			add_location(div4, file, 136, 12, 4817);
+    			add_location(div5, file, 145, 16, 5138);
+    			attr_dev(div6, "class", "column");
+    			add_location(div6, file, 144, 12, 5101);
+    			attr_dev(div7, "class", "columns block");
+    			add_location(div7, file, 127, 8, 4481);
+    			attr_dev(div8, "class", "container");
+    			add_location(div8, file, 123, 4, 4313);
+    			attr_dev(section0, "class", "section svelte-ea1nut");
+    			add_location(section0, file, 122, 0, 4283);
+    			set_svg_attributes(svg, svg_data);
+    			toggle_class(svg, "svelte-ea1nut", true);
+    			add_location(svg, file, 158, 12, 5559);
+    			set_style(div9, "margin-top", "20px");
+    			add_location(div9, file, 157, 8, 5515);
+    			set_style(main, "text-align", "center");
+    			add_location(main, file, 156, 4, 5472);
+    			attr_dev(section1, "class", "section svelte-ea1nut");
+    			add_location(section1, file, 155, 0, 5442);
+    		},
+    		l: function claim(nodes) {
+    			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
+    		},
+    		m: function mount(target, anchor) {
+    			insert_dev(target, section0, anchor);
+    			append_dev(section0, div8);
+    			append_dev(div8, div0);
+    			mount_component(dropzone, div0, null);
+    			append_dev(div8, t0);
+    			append_dev(div8, div7);
+    			append_dev(div7, div2);
+    			append_dev(div2, div1);
+    			append_dev(div1, t1);
+    			append_dev(div1, t2);
+    			append_dev(div2, t3);
+    			mount_component(slider0, div2, null);
+    			append_dev(div7, t4);
+    			append_dev(div7, div4);
+    			append_dev(div4, div3);
+    			append_dev(div3, t5);
+    			append_dev(div3, t6);
+    			append_dev(div4, t7);
+    			mount_component(slider1, div4, null);
+    			append_dev(div7, t8);
+    			append_dev(div7, div6);
+    			append_dev(div6, div5);
+    			append_dev(div5, t9);
+    			append_dev(div5, t10);
+    			append_dev(div6, t11);
+    			mount_component(slider2, div6, null);
+    			insert_dev(target, t12, anchor);
+    			insert_dev(target, section1, anchor);
+    			append_dev(section1, main);
+    			append_dev(main, div9);
+    			append_dev(div9, svg);
+    			/*svg_binding*/ ctx[10](svg);
+    			current = true;
+    		},
+    		p: function update(ctx, [dirty]) {
+    			if (!current || dirty & /*roughness*/ 1) set_data_dev(t2, /*roughness*/ ctx[0]);
+    			const slider0_changes = {};
+    			if (dirty & /*roughness*/ 1) slider0_changes.value = [0, /*roughness*/ ctx[0] / 5];
+    			slider0.$set(slider0_changes);
+    			if (!current || dirty & /*bowing*/ 2) set_data_dev(t6, /*bowing*/ ctx[1]);
+    			const slider1_changes = {};
+    			if (dirty & /*bowing*/ 2) slider1_changes.value = [0, /*bowing*/ ctx[1] / 5];
+    			slider1.$set(slider1_changes);
+    			if (!current || dirty & /*simplification*/ 4) set_data_dev(t10, /*simplification*/ ctx[2]);
+    			const slider2_changes = {};
+    			if (dirty & /*simplification*/ 4) slider2_changes.value = [0, /*simplification*/ ctx[2] / 5];
+    			slider2.$set(slider2_changes);
+    			set_svg_attributes(svg, svg_data = get_spread_update(svg_levels, [dirty & /*svgArgs*/ 16 && /*svgArgs*/ ctx[4]]));
+    			toggle_class(svg, "svelte-ea1nut", true);
+    		},
+    		i: function intro(local) {
+    			if (current) return;
+    			transition_in(dropzone.$$.fragment, local);
+    			transition_in(slider0.$$.fragment, local);
+    			transition_in(slider1.$$.fragment, local);
+    			transition_in(slider2.$$.fragment, local);
+    			current = true;
+    		},
+    		o: function outro(local) {
+    			transition_out(dropzone.$$.fragment, local);
+    			transition_out(slider0.$$.fragment, local);
+    			transition_out(slider1.$$.fragment, local);
+    			transition_out(slider2.$$.fragment, local);
+    			current = false;
+    		},
+    		d: function destroy(detaching) {
+    			if (detaching) detach_dev(section0);
+    			destroy_component(dropzone);
+    			destroy_component(slider0);
+    			destroy_component(slider1);
+    			destroy_component(slider2);
+    			if (detaching) detach_dev(t12);
+    			if (detaching) detach_dev(section1);
+    			/*svg_binding*/ ctx[10](null);
+    		}
+    	};
+
+    	dispatch_dev("SvelteRegisterBlock", {
+    		block,
+    		id: create_fragment.name,
+    		type: "component",
+    		source: "",
+    		ctx
+    	});
+
+    	return block;
+    }
+
+    function instance($$self, $$props, $$invalidate) {
+    	let { $$slots: slots = {}, $$scope } = $$props;
+    	validate_slots('App', slots, []);
+    	let svgEl;
+    	let svgArgs = { width: 0, height: 0 };
+    	let lastSvg;
+    	let roughness = 1;
+    	let bowing = 1;
+    	let simplification = 0;
+
+    	function handleFilesSelect(e) {
+    		const { acceptedFiles } = e.detail;
+    		const reader = new FileReader();
+
+    		reader.onload = () => {
+    			$$invalidate(6, lastSvg = reader.result);
+    			svgToRough(lastSvg);
+    		};
+
+    		reader.readAsText(acceptedFiles[0]);
+    	}
+
+    	function svgToRough(svgString) {
+    		const domParser = new DOMParser();
+    		$$invalidate(3, svgEl.innerHTML = '', svgEl);
+    		const svgDom = domParser.parseFromString(svgString, 'image/svg+xml');
+    		const svgSrc = svgDom.documentElement;
+    		const svgTarget = svgEl;
+
+    		$$invalidate(4, svgArgs = {
+    			width: +svgSrc.attributes.width.nodeValue,
+    			height: +svgSrc.attributes.height.nodeValue,
+    			xmlns: svgSrc.attributes.xmlns.nodeValue
+    		});
+
+    		const roughSvg = rough_cjs.svg(svgEl);
+    		walk(svgTarget, svgSrc);
+
+    		function walk(root, element) {
+    			if (!element) return;
+    			const opts = getStyle(element);
+
+    			if (element.nodeName === 'text') {
+    				const txt = element.cloneNode(true);
+    				appendChild(root, element, txt);
+    				return;
+    			}
+
+    			if (element.nodeName === 'rect') {
+    				const [x, y, w, h] = attrs(element, 'x', 'y', 'width', 'height');
+    				appendChild(root, element, roughSvg.rectangle(x, y, w, h, opts));
+    				return;
+    			}
+
+    			if (element.nodeName === 'circle') {
+    				const [x, y, r] = attrs(element, 'x', 'y', 'r');
+    				appendChild(root, element, roughSvg.circle(x, y, r * 2, opts));
+    				return;
+    			}
+
+    			if (element.nodeName === 'path') {
+    				const d = element.getAttribute('d');
+    				appendChild(root, element, roughSvg.path(d, opts));
+    				return;
+    			}
+
+    			if (element.nodeName === 'line') {
+    				element.getAttribute('d');
+    				const [x1, y1, x2, y2] = attrs(element, 'x1', 'y1', 'x2', 'y2');
+    				appendChild(root, element, roughSvg.line(x1, y1, x2, y2, opts));
+    				return;
+    			}
+
+    			if (element.nodeName === 'g') {
+    				const g = element.cloneNode(false);
+    				appendChild(root, element, g);
+    				root = g;
+    			} else {
+    				console.log(element.nodeName);
+    			}
+
+    			if (element.children.length) {
+    				for (const child of element.children) {
+    					walk(root, child);
+    				}
+    			}
+    		}
+
+    		function getStyle(el) {
+    			let { fill, stroke, strokeWidth, opacity } = el.style || {};
+    			const hasFill = fill && fill !== 'none';
+    			const hasStroke = stroke && stroke !== 'none';
+    			if (opacity === '') opacity = 1;
+
+    			return {
+    				roughness,
+    				bowing,
+    				simplification,
+    				fill: fill && fill !== 'none' ? fill : 'none',
+    				stroke: hasStroke ? stroke : 'none',
+    				...hasFill
+    				? {
+    						fillWeight: opacity < 0.5 ? 0.5 : opacity < 0.8 ? 1.4 : 2,
+    						hachureAngle: [-41, 49][Math.round(Math.random())],
+    						fillStyle: opacity < 0.4 ? 'hachure' : 'zigzag'
+    					}
+    				: {},
+    				...hasStroke
+    				? {
+    						strokeWidth: +strokeWidth.replace('px', '') || 1
+    					}
+    				: {}
+    			};
+    		}
+
+    		function appendChild(root, src, newEl) {
+    			newEl.setAttribute('transform', src.getAttribute('transform') || '');
+    			root.appendChild(newEl);
+    		}
+
+    		function attrs(el, ...attrs) {
+    			return attrs.map(key => +el.getAttribute(key));
+    		}
+    	}
+
+    	onMount(() => {
+    		
+    	});
+
+    	const writable_props = [];
+
+    	Object.keys($$props).forEach(key => {
+    		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== '$$' && key !== 'slot') console_1.warn(`<App> was created with unknown prop '${key}'`);
+    	});
+
+    	const change_handler = event => $$invalidate(0, roughness = event.detail[1] * 5);
+    	const change_handler_1 = event => $$invalidate(1, bowing = event.detail[1] * 5);
+    	const change_handler_2 = event => $$invalidate(2, simplification = event.detail[1] * 5);
+
+    	function svg_binding($$value) {
+    		binding_callbacks[$$value ? 'unshift' : 'push'](() => {
+    			svgEl = $$value;
+    			$$invalidate(3, svgEl);
+    		});
+    	}
+
+    	$$self.$capture_state = () => ({
+    		Dropzone,
+    		Slider,
+    		rough: rough_cjs,
+    		onMount,
+    		svgEl,
+    		svgArgs,
+    		lastSvg,
+    		roughness,
+    		bowing,
+    		simplification,
+    		handleFilesSelect,
+    		svgToRough
+    	});
+
+    	$$self.$inject_state = $$props => {
+    		if ('svgEl' in $$props) $$invalidate(3, svgEl = $$props.svgEl);
+    		if ('svgArgs' in $$props) $$invalidate(4, svgArgs = $$props.svgArgs);
+    		if ('lastSvg' in $$props) $$invalidate(6, lastSvg = $$props.lastSvg);
+    		if ('roughness' in $$props) $$invalidate(0, roughness = $$props.roughness);
+    		if ('bowing' in $$props) $$invalidate(1, bowing = $$props.bowing);
+    		if ('simplification' in $$props) $$invalidate(2, simplification = $$props.simplification);
+    	};
+
+    	if ($$props && "$$inject" in $$props) {
+    		$$self.$inject_state($$props.$$inject);
+    	}
+
+    	$$self.$$.update = () => {
+    		if ($$self.$$.dirty & /*lastSvg, roughness, bowing, simplification*/ 71) {
+    			{
+    				if (lastSvg) {
+    					svgToRough(lastSvg);
+    				}
+    			}
+    		}
+    	};
+
+    	return [
+    		roughness,
+    		bowing,
+    		simplification,
+    		svgEl,
+    		svgArgs,
+    		handleFilesSelect,
+    		lastSvg,
+    		change_handler,
+    		change_handler_1,
+    		change_handler_2,
+    		svg_binding
+    	];
+    }
+
+    class App extends SvelteComponentDev {
+    	constructor(options) {
+    		super(options);
+    		init(this, options, instance, create_fragment, safe_not_equal, {});
+
+    		dispatch_dev("SvelteRegisterComponent", {
+    			component: this,
+    			tagName: "App",
+    			options,
+    			id: create_fragment.name
+    		});
+    	}
+    }
+
+    const app = new App({
+    	target: document.body,
+    	props: {
+    		name: 'world'
+    	}
+    });
+
+    return app;
+
+})();
 //# sourceMappingURL=bundle.js.map

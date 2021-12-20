@@ -1,23 +1,28 @@
 <script>
     import Dropzone from 'svelte-file-dropzone';
+    import Slider from 'svelte-slider';
     import rough from 'roughjs/bundled/rough.cjs.js';
     import { onMount } from 'svelte';
 
     let svgEl;
     let svgArgs = { width: 0, height: 0 };
-    let origSvg;
+    let lastSvg;
+
+    let roughness = 1;
+    let bowing = 1;
+    let simplification = 0;
 
     function handleFilesSelect(e) {
         const { acceptedFiles } = e.detail;
         const reader = new FileReader();
         reader.onload = () => {
-            svgToRough(reader.result);
+            lastSvg = reader.result;
+            svgToRough(lastSvg);
         };
         reader.readAsText(acceptedFiles[0]);
     }
 
     function svgToRough(svgString) {
-        origSvg = svgString;
         const domParser = new DOMParser();
         svgEl.innerHTML = '';
         const svgDom = domParser.parseFromString(svgString, 'image/svg+xml');
@@ -44,6 +49,11 @@
             if (element.nodeName === 'rect') {
                 const [x, y, w, h] = attrs(element, 'x', 'y', 'width', 'height');
                 appendChild(root, element, roughSvg.rectangle(x, y, w, h, opts));
+                return;
+            }
+            if (element.nodeName === 'circle') {
+                const [x, y, r] = attrs(element, 'x', 'y', 'r');
+                appendChild(root, element, roughSvg.circle(x, y, r * 2, opts));
                 return;
             }
             if (element.nodeName === 'path') {
@@ -75,9 +85,11 @@
             const hasFill = fill && fill !== 'none';
             const hasStroke = stroke && stroke !== 'none';
             if (opacity === '') opacity = 1;
-            if (hasFill) console.log({ opacity });
 
             return {
+                roughness,
+                bowing,
+                simplification,
                 fill: fill && fill !== 'none' ? fill : 'none',
                 stroke: hasStroke ? stroke : 'none',
                 ...(hasFill
@@ -100,22 +112,66 @@
     }
 
     onMount(() => {});
+
+    $: {
+        if (lastSvg) {
+            svgToRough(lastSvg, { roughness, bowing, simplification });
+        }
+    }
 </script>
 
-<Dropzone multiple={false} accept="image/svg+xml" on:drop={handleFilesSelect} />
-<main style="text-align: center;">
-    <div style="margin-top: 20px;">
-        <svg bind:this={svgEl} {...svgArgs} />
+<section class="section">
+    <div class="container">
+        <div class="block">
+            <Dropzone multiple={false} accept="image/svg+xml" on:drop={handleFilesSelect} />
+        </div>
+        <div class="columns block">
+            <div class="column">
+                <div>roughness: {roughness}</div>
+                <Slider
+                    on:change={(event) => (roughness = event.detail[1] * 5)}
+                    value={[0, roughness / 5]}
+                    single
+                />
+            </div>
+            <div class="column">
+                <div>bowing: {bowing}</div>
+                <Slider
+                    on:change={(event) => (bowing = event.detail[1] * 5)}
+                    value={[0, bowing / 5]}
+                    single
+                />
+            </div>
+            <div class="column">
+                <div>simplification: {simplification}</div>
+                <Slider
+                    on:change={(event) => (simplification = event.detail[1] * 5)}
+                    value={[0, simplification / 5]}
+                    single
+                />
+            </div>
+        </div>
     </div>
+</section>
+<section class="section">
+    <main style="text-align: center;">
+        <div style="margin-top: 20px;">
+            <svg bind:this={svgEl} {...svgArgs} />
+        </div>
 
-    <!-- {@html origSvg || ''} -->
-</main>
+        <!-- {@html lastSvg || ''} -->
+    </main>
+</section>
 
 <style>
-    svg {
-    }
     svg :global(text),
     svg :global(tspan) {
         font-family: 'Patrick Hand', cursive !important;
+    }
+
+    section {
+        --sliderPrimary: #ff9800;
+        --sliderSecondary: rgba(0, 0, 0, 0.05);
+        margin: 16px;
     }
 </style>
