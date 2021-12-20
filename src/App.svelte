@@ -123,7 +123,9 @@
 <section class="section">
     <div class="container">
         <div class="block">
-            <Dropzone multiple={false} accept="image/svg+xml" on:drop={handleFilesSelect} />
+            <Dropzone multiple={false} accept="image/svg+xml" on:drop={handleFilesSelect}
+                ><div class="is-size-1">Drop your SVG file here</div></Dropzone
+            >
         </div>
         <div class="columns block">
             <div class="column">
